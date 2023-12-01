@@ -20,14 +20,9 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import React from "react";
 import AuthService from "@/api/AuthService";
+import Cookies from "js-cookie";
 
 type Props = {};
-
-type ITypeRes = {
-  result: {
-    token: string;
-  };
-};
 
 const LoginPage = (props: Props) => {
   const router = useRouter();
@@ -47,7 +42,7 @@ const LoginPage = (props: Props) => {
       onSubmit: (values) => {
         AuthService.login(values).then((res: any) => {
           if (res.msg === "success") {
-            localStorage.setItem("token", res.result.token);
+            Cookies.set("token", res.result.token);
             router.push("/managements/users");
           }
         });

@@ -1,25 +1,23 @@
-import { ITypeAuth } from "./../redux/auth/types";
 import api from "./https_request";
 import Cookies from "js-cookie";
 
-const AuthService = {
-  login(data: ITypeAuth) {
-    const token = Cookies.get("token");
-
-    return api.post({
-      path: `/login`,
-      body: data,
-      headers: { token: token },
-    });
-  },
-  logout() {
+const FileService = {
+  getFileById(fileId: number) {
     const token = Cookies.get("token");
 
     return api.get({
-      path: `/logout`,
+      path: `/file/${fileId}`,
+      headers: { token: token },
+    });
+  },
+  downloadFileById(fileId: number) {
+    const token = Cookies.get("token");
+
+    return api.get({
+      path: `/download_file/${fileId}`,
       headers: { token: token },
     });
   },
 };
 
-export default AuthService;
+export default FileService;

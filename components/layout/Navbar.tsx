@@ -25,6 +25,7 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import ListItemButtonCT from "../common/ListItemButtonCT";
 import AuthService from "@/api/AuthService";
+import Cookies from "js-cookie";
 
 type Props = {
   open: boolean;
@@ -44,7 +45,7 @@ const NavBar = (props: Props) => {
   function logoutUser() {
     AuthService.logout().then((res: any) => {
       if (res.msg === "success") {
-        localStorage.removeItem("token");
+        Cookies.set("token", "");
         router.push("/login");
       }
     });

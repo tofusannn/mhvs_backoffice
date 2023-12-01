@@ -9,6 +9,14 @@ const nextConfig = {
       },
     ];
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "public.aorsortor.online",
+      },
+    ],
+  },
 };
 
 module.exports = nextConfig;

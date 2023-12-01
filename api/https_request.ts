@@ -1,6 +1,5 @@
 var axios = require("axios");
 const url = "http://116.204.182.19:8000/admin/v1";
-const token = localStorage.getItem("token");
 
 type ITypeApi = {
   path: string;
@@ -17,7 +16,6 @@ const api = {
         accept: "application/json",
         "Content-Type": "application/json",
         ...headers,
-        token: token,
       },
       data: body,
     };
@@ -36,7 +34,7 @@ const api = {
     var config = {
       method: "get",
       url: `${url}${path}`,
-      headers: { accept: "application/json", ...headers, token: token },
+      headers: { accept: "application/json", ...headers },
       data: body,
     };
     let payload;
@@ -58,7 +56,6 @@ const api = {
         accept: "application/json",
         "Content-Type": "application/json",
         ...headers,
-        token: token,
       },
       data: body,
     };
@@ -77,7 +74,7 @@ const api = {
     var config = {
       method: "delete",
       url: `${url}${path}`,
-      headers: { accept: "application/json", ...headers, token: token },
+      headers: { accept: "application/json", ...headers },
       data: body,
     };
     let payload;
@@ -101,7 +98,6 @@ const api = {
         accept: "application/json",
         "Content-Type": "multipart/form-data",
         ...headers,
-        token: token,
       },
       data: formData,
     };

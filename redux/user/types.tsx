@@ -1,9 +1,15 @@
 export type ITypeUser = {
-  image: string;
+  id: number;
+  username: string;
+  password: string;
+  email: string;
+  phone: string;
+  gender: string;
+  nationality: string;
   pre_name: string;
   first_name: string;
   last_name: string;
-  nationality: string;
-  gender: string;
-  phone: string;
+  idcard: string;
+  date_of_birth: string;
+  img_id: number;
 };

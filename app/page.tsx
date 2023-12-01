@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Noto_Sans } from "next/font/google";
+import Cookies from "js-cookie";
 
 type ITypeStyled = {
   theme?: any;
@@ -24,6 +25,7 @@ export default function MainPage({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [reloadPage, setReloadPage] = useState(true);
   const [open, setOpen] = useState(false);
+  const token = Cookies.get("token");
 
   setTimeout(() => setReloadPage(false), 1000);
 
@@ -32,13 +34,12 @@ export default function MainPage({ children }: { children: React.ReactNode }) {
   }, []);
 
   function checkToken() {
-    const token = localStorage.getItem("token");
     if (token) {
-      if (pathname === "/login") {
+      if (pathname === "/auth") {
         router.push("/managements/users");
       }
     } else {
-      router.push("/login");
+      router.push("/auth");
     }
   }
 
