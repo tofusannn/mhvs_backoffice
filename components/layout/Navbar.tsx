@@ -91,11 +91,11 @@ const NavBar = (props: Props) => {
         link="/managements/chapter"
         icon={<MenuBook fontSize="small" />}
       />
-      <ListItemButtonCT
+      {/* <ListItemButtonCT
         title="Homework"
         link="/managements/homework"
         icon={<LibraryBooks fontSize="small" />}
-      />
+      /> */}
     </List>
   );
   return (

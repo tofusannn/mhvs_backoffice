@@ -1,72 +1,67 @@
 "use client";
 
 import * as yup from "yup";
-import UserService from "@/api/Managements/UserService";
-import CUModal from "@/components/modal/CUModal";
-import DataTable from "@/components/table/DataTable";
+import ChapterService from "@/api/Managements/ChapterService";
+import Toast from "@/components/common/Toast";
+import DModal from "@/components/modal/DModal";
 import HeaderText from "@/components/typography/HeaderText";
-import { ITypeUser } from "@/redux/user/types";
-import { Delete, Edit, ErrorOutline } from "@mui/icons-material";
+import { ITypeChapter } from "@/redux/chapter/types";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import DataTable from "@/components/table/DataTable";
 import {
   Button,
   DialogActions,
   DialogContent,
   Grid,
   IconButton,
+  MenuItem,
   TableBody,
   TableCell,
   TableRow,
   TextField,
   Typography,
-  styled,
 } from "@mui/material";
-import React, { useEffect, useMemo, useState } from "react";
+import { Edit, Delete } from "@mui/icons-material";
 import { useFormik } from "formik";
-import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
-import Toast from "@/components/common/Toast";
-import DModal from "@/components/modal/DModal";
+import CUModal from "@/components/modal/CUModal";
 
 const headCells = [
   {
-    id: "id",
+    id: "index",
     label: "ID",
   },
   {
-    id: "pre_name",
-    label: "Fullname",
+    id: "chapter_name",
+    label: "Name",
   },
   {
-    id: "nationality",
-    label: "Nationality",
+    id: "chapter_description",
+    label: "Description",
   },
   {
-    id: "gender",
-    label: "Gender",
-  },
-  {
-    id: "phone",
-    label: "Phone Number",
+    id: "lesson_id",
+    label: "Lesson Id",
   },
 ];
 
-const initialValues: ITypeUser = {
-  id: 0,
-  username: "",
-  password: "",
-  email: "",
-  phone: "",
-  gender: "",
-  nationality: "",
-  pre_name: "",
-  first_name: "",
-  last_name: "",
-  idcard: "",
-  date_of_birth: "2023-12-01",
-  img_id: 0,
+const initialValues: ITypeChapter = {
+  index: 0,
+  chapter_name: "",
+  chapter_description: "",
+  lesson_id: 0,
+  chapter_pre_description: "",
+  display: true,
+  practical: false,
+  pre_test: 0,
+  post_test: 0,
+  video: 0,
+  file: 0,
+  homework: 0,
 };
 
-const UserManagementsPage = () => {
+const ChapterManagementsPage = () => {
   const router = useRouter();
   const [dataList, setDataList] = useState([]);
   const [dataSearchList, setDataSearchList] = useState([]);
@@ -83,14 +78,14 @@ const UserManagementsPage = () => {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    getAllUserList();
+    getAllChapterList();
   }, []);
 
-  async function getAllUserList() {
-    let respons = await UserService.getUserList().then((res: any) => res);
+  async function getAllChapterList() {
+    let respons = await ChapterService.getChapterList().then((res: any) => res);
     if (respons.status) {
-      respons = respons.result.sort((a: ITypeUser, b: ITypeUser) => {
-        return a.id - b.id;
+      respons = respons.result.sort((a: ITypeChapter, b: ITypeChapter) => {
+        return a.index - b.index;
       });
     } else {
       alert("Token Expire");
@@ -101,28 +96,12 @@ const UserManagementsPage = () => {
     setDataList(respons);
   }
 
-  // const emptyRows =
-  //   page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dataList.length) : 0;
-
-  // const visibleRows = useMemo(
-  //   () => dataList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-  //   [dataList, page, rowsPerPage]
-  // );
-
   function openDialog(params: string, rows?: any) {
     if (params === "delete") {
       setOpenDelete(true);
       setIdDelete(rows.id);
     } else if (params === "edit") {
-      const fields = [
-        "id",
-        "pre_name",
-        "first_name",
-        "last_name",
-        "nationality",
-        "gender",
-        "phone",
-      ];
+      const fields = ["id", "chapter_name", "chapter_description", "lesson_id"];
       fields.forEach((field) => setFieldValue(field, rows[field], false));
       setType(params);
       setOpen(true);
@@ -132,8 +111,8 @@ const UserManagementsPage = () => {
     }
   }
 
-  function deleteUser() {
-    UserService.deleteUserById(idDelete).then((res: any) => {
+  function deleteChapter() {
+    ChapterService.deleteChapterById(idDelete).then((res: any) => {
       if (res.msg === "success") {
         setOpenDelete(false);
         setOpenToast(true);
@@ -148,12 +127,16 @@ const UserManagementsPage = () => {
   }
 
   const validationSchema = yup.object({
-    pre_name: yup.string().required("Prename is required"),
-    first_name: yup.string().required("Firstname is required"),
-    last_name: yup.string(),
-    nationality: yup.string().required("Nationality is required"),
-    gender: yup.string().required("Gender is required"),
-    phone: yup.string().min(10).max(10).required("Phone is required"),
+    chapter_name: yup.string().required("Chapter Name is required"),
+    chapter_description: yup
+      .string()
+      .required("Chapter Description is required"),
+    lesson_id: yup.string().required("Lesson Id is required"),
+    pre_test: yup.string().required("pre_test Id is required"),
+    post_test: yup.string().required("post_test Id is required"),
+    video: yup.string().required("video Id is required"),
+    file: yup.string().required("file Id is required"),
+    homework: yup.string().required("homework Id is required"),
   });
 
   const {
@@ -170,7 +153,7 @@ const UserManagementsPage = () => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       if (type === "edit") {
-        UserService.putUserById(values.id, values).then((res: any) => {
+        ChapterService.putChapterById(values.index, values).then((res: any) => {
           if (res.msg === "success") {
             setOpen(false);
             setOpenToast(true);
@@ -182,7 +165,7 @@ const UserManagementsPage = () => {
           }
         });
       } else {
-        UserService.postUser(values).then((res: any) => {
+        ChapterService.postChapter(values).then((res: any) => {
           if (res.msg === "success") {
             setOpen(false);
             setOpenToast(true);
@@ -223,8 +206,8 @@ const UserManagementsPage = () => {
 
   function searchName(e: any) {
     const name = e.target.value;
-    const newData = dataList.filter((i: ITypeUser) =>
-      i.first_name.startsWith(name)
+    const newData = dataList.filter((i: ITypeChapter) =>
+      i.chapter_name.startsWith(name)
     );
     setSearch(name);
     setDataSearchList(newData);
@@ -232,7 +215,7 @@ const UserManagementsPage = () => {
 
   return (
     <div>
-      <HeaderText title="User Managements" />
+      <HeaderText title="Chapter Managements" />
       <DataTable
         countData={search != "" ? dataSearchList.length : dataList.length}
         headCells={headCells}
@@ -244,22 +227,31 @@ const UserManagementsPage = () => {
         searchFunction={searchName}
       >
         <TableBody>
-          {visibleRows.map((row: ITypeUser, index: number) => {
+          {visibleRows.map((row: ITypeChapter, index: number) => {
             return (
-              <TableRow tabIndex={-1} key={row.id}>
-                <TableCell>{row.id}</TableCell>
-                <TableCell>
-                  {row.pre_name === "mr" ? "นาย" : "นางสาว"} {row.first_name}{" "}
-                  {row.last_name}
+              <TableRow tabIndex={-1} key={row.index}>
+                <TableCell>{row.index}</TableCell>
+                <TableCell
+                  sx={{
+                    maxWidth: 200,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {row.chapter_name}
                 </TableCell>
-                <TableCell>
-                  {row.nationality.charAt(0).toUpperCase() +
-                    row.nationality.slice(1)}
+                <TableCell
+                  sx={{
+                    maxWidth: 150,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {row.chapter_description}
                 </TableCell>
-                <TableCell>
-                  {row.gender.charAt(0).toUpperCase() + row.gender.slice(1)}
-                </TableCell>
-                <TableCell>{row.phone}</TableCell>
+                <TableCell>{row.lesson_id}</TableCell>
                 <TableCell>
                   <IconButton onClick={() => openDialog("edit", row)}>
                     <Edit />
@@ -286,7 +278,7 @@ const UserManagementsPage = () => {
         open={open}
         setOpen={setOpen}
         type={type}
-        title={"User"}
+        title={"Chapter"}
         resetForm={resetForm}
       >
         <form onSubmit={handleSubmit}>
@@ -297,123 +289,180 @@ const UserManagementsPage = () => {
                   sx={{ display: "none" }}
                   id="id"
                   name="id"
-                  value={values.id}
+                  value={values.index}
                   onChange={handleChange}
                 ></TextField>
                 <Typography>
-                  คำนำหน้า<span style={{ color: "red" }}>*</span>
+                  ชื่อบท<span style={{ color: "red" }}>*</span>
                 </Typography>
                 <TextField
-                  id="pre_name"
-                  name="pre_name"
+                  id="chapter_name"
+                  name="chapter_name"
                   sx={{ width: "50%" }}
+                  multiline
+                  rows={2}
                   fullWidth
                   size="small"
-                  value={values.pre_name}
+                  value={values.chapter_name}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={touched.pre_name && Boolean(errors.pre_name)}
+                  error={touched.chapter_name && Boolean(errors.chapter_name)}
                   helperText={
-                    touched.pre_name &&
-                    Boolean(errors.pre_name) &&
-                    errors.pre_name
+                    touched.chapter_name &&
+                    Boolean(errors.chapter_name) &&
+                    errors.chapter_name
                   }
                 ></TextField>
               </Grid>
               <Grid container justifyContent={"space-between"}>
                 <Typography>
-                  ชื่อจริง<span style={{ color: "red" }}>*</span>
+                  รายละเอียด<span style={{ color: "red" }}>*</span>
                 </Typography>
                 <TextField
-                  id="first_name"
-                  name="first_name"
+                  id="chapter_description"
+                  name="chapter_description"
                   sx={{ width: "50%" }}
+                  multiline
+                  rows={10}
                   fullWidth
                   size="small"
-                  value={values.first_name}
+                  value={values.chapter_description}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={touched.first_name && Boolean(errors.first_name)}
+                  error={
+                    touched.chapter_description &&
+                    Boolean(errors.chapter_description)
+                  }
                   helperText={
-                    touched.first_name &&
-                    Boolean(errors.first_name) &&
-                    errors.first_name
+                    touched.chapter_description &&
+                    Boolean(errors.chapter_description) &&
+                    errors.chapter_description
                   }
                 ></TextField>
               </Grid>
               <Grid container justifyContent={"space-between"}>
                 <Typography>
-                  นามสกุล<span style={{ color: "red" }}>*</span>
+                  บทเรียน<span style={{ color: "red" }}>*</span>
                 </Typography>
                 <TextField
-                  id="last_name"
+                  id="lesson_id"
+                  name="lesson_id"
                   sx={{ width: "50%" }}
                   fullWidth
                   size="small"
-                  value={values.last_name}
+                  value={values.lesson_id}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={touched.last_name && Boolean(errors.last_name)}
+                  error={touched.lesson_id && Boolean(errors.lesson_id)}
                   helperText={
-                    touched.last_name &&
-                    Boolean(errors.last_name) &&
-                    errors.last_name
+                    touched.lesson_id &&
+                    Boolean(errors.lesson_id) &&
+                    errors.lesson_id
                   }
                 ></TextField>
               </Grid>
               <Grid container justifyContent={"space-between"}>
                 <Typography>
-                  เชื้อชาติ<span style={{ color: "red" }}>*</span>
+                  pre_test<span style={{ color: "red" }}>*</span>
                 </Typography>
                 <TextField
-                  id="nationality"
+                  id="pre_test"
+                  name="pre_test"
                   sx={{ width: "50%" }}
                   fullWidth
                   size="small"
-                  value={values.nationality}
+                  value={values.pre_test}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={touched.nationality && Boolean(errors.nationality)}
+                  error={touched.pre_test && Boolean(errors.pre_test)}
                   helperText={
-                    touched.nationality &&
-                    Boolean(errors.nationality) &&
-                    errors.nationality
+                    touched.pre_test &&
+                    Boolean(errors.pre_test) &&
+                    errors.pre_test
                   }
                 ></TextField>
               </Grid>
               <Grid container justifyContent={"space-between"}>
                 <Typography>
-                  เพศ<span style={{ color: "red" }}>*</span>
+                  post_test<span style={{ color: "red" }}>*</span>
                 </Typography>
                 <TextField
-                  id="gender"
+                  id="post_test"
+                  name="post_test"
                   sx={{ width: "50%" }}
                   fullWidth
                   size="small"
-                  value={values.gender}
+                  value={values.post_test}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={touched.gender && Boolean(errors.gender)}
+                  error={touched.post_test && Boolean(errors.post_test)}
                   helperText={
-                    touched.gender && Boolean(errors.gender) && errors.gender
+                    touched.post_test &&
+                    Boolean(errors.post_test) &&
+                    errors.post_test
                   }
                 ></TextField>
               </Grid>
               <Grid container justifyContent={"space-between"}>
                 <Typography>
-                  เบอร์โทรศัพท์<span style={{ color: "red" }}>*</span>
+                  video<span style={{ color: "red" }}>*</span>
                 </Typography>
                 <TextField
-                  id="phone"
+                  id="lesson_id"
+                  name="lesson_id"
                   sx={{ width: "50%" }}
                   fullWidth
                   size="small"
-                  value={values.phone}
+                  value={values.lesson_id}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={touched.phone && Boolean(errors.phone)}
+                  error={touched.lesson_id && Boolean(errors.lesson_id)}
                   helperText={
-                    touched.phone && Boolean(errors.phone) && errors.phone
+                    touched.lesson_id &&
+                    Boolean(errors.lesson_id) &&
+                    errors.lesson_id
+                  }
+                ></TextField>
+              </Grid>
+              <Grid container justifyContent={"space-between"}>
+                <Typography>
+                  file<span style={{ color: "red" }}>*</span>
+                </Typography>
+                <TextField
+                  id="lesson_id"
+                  name="lesson_id"
+                  sx={{ width: "50%" }}
+                  fullWidth
+                  size="small"
+                  value={values.lesson_id}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.lesson_id && Boolean(errors.lesson_id)}
+                  helperText={
+                    touched.lesson_id &&
+                    Boolean(errors.lesson_id) &&
+                    errors.lesson_id
+                  }
+                ></TextField>
+              </Grid>
+              <Grid container justifyContent={"space-between"}>
+                <Typography>
+                  homework<span style={{ color: "red" }}>*</span>
+                </Typography>
+                <TextField
+                  id="lesson_id"
+                  name="lesson_id"
+                  sx={{ width: "50%" }}
+                  fullWidth
+                  size="small"
+                  value={values.lesson_id}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.lesson_id && Boolean(errors.lesson_id)}
+                  helperText={
+                    touched.lesson_id &&
+                    Boolean(errors.lesson_id) &&
+                    errors.lesson_id
                   }
                 ></TextField>
               </Grid>
@@ -426,7 +475,11 @@ const UserManagementsPage = () => {
           </DialogActions>
         </form>
       </CUModal>
-      <DModal open={openDelete} setOpen={setOpenDelete} confirm={deleteUser} />
+      <DModal
+        open={openDelete}
+        setOpen={setOpenDelete}
+        confirm={deleteChapter}
+      />
       <Toast
         open={openToast}
         setOpen={setOpenToast}
@@ -437,4 +490,4 @@ const UserManagementsPage = () => {
   );
 };
 
-export default UserManagementsPage;
+export default ChapterManagementsPage;

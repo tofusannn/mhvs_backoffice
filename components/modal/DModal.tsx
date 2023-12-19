@@ -1,3 +1,4 @@
+import { ErrorOutline } from "@mui/icons-material";
 import {
   Button,
   Dialog,
@@ -11,7 +12,7 @@ import React from "react";
 type Props = {
   open: boolean;
   setOpen: (open: boolean) => void;
-  children: React.ReactNode;
+  // children: React.ReactNode;
   confirm: () => void;
 };
 
@@ -19,7 +20,19 @@ const DModal = (props: Props) => {
   return (
     <Dialog open={props.open} maxWidth={"xs"} fullWidth>
       <DialogContent>
-        {props.children}
+        <Grid
+          sx={{ marginBottom: 3 }}
+          container
+          justifyContent={"center"}
+          alignItems={"center"}
+        >
+          <Grid item xs={12} textAlign={"center"} sx={{ marginY: 5 }}>
+            <ErrorOutline color="error" sx={{ fontSize: "100px" }} />
+          </Grid>
+          <Typography fontSize={32} fontWeight={500}>
+            คุณต้องการลบใช่มั้ย ?
+          </Typography>
+        </Grid>
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <Button

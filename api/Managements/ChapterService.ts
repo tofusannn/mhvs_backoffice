@@ -1,58 +1,50 @@
-import { ITypeLesson } from "@/redux/lesson/types";
+import { ITypeChapter } from "@/redux/chapter/types";
 import api from "../https_request";
 import Cookies from "js-cookie";
 
-const LessonService = {
-  postLesson(data: ITypeLesson) {
+const ChapterService = {
+  postChapter(data: ITypeChapter) {
     const token = Cookies.get("token");
 
     return api.post({
-      path: `/lesson`,
+      path: `/chapter`,
       body: data,
       headers: { token: token },
     });
   },
-  getLessonList() {
+  getChapterList() {
     const token = Cookies.get("token");
 
     return api.get({
-      path: `/lesson`,
+      path: `/chapter`,
       headers: { token: token },
     });
   },
-  getLessonById(id: number) {
+  getChapterById(id: number) {
     const token = Cookies.get("token");
 
     return api.get({
-      path: `/lesson/${id}`,
+      path: `/chapter/${id}`,
       headers: { token: token },
     });
   },
-  putLessonById(id: number, data: ITypeLesson) {
+  putChapterById(id: number, data: ITypeChapter) {
     const token = Cookies.get("token");
 
     return api.put({
-      path: `/lesson/${id}`,
+      path: `/chapter/${id}`,
       body: data,
       headers: { token: token },
     });
   },
-  deleteLessonById(id: number) {
+  deleteChapterById(id: number) {
     const token = Cookies.get("token");
 
     return api.delete({
-      path: `/lesson/${id}`,
-      headers: { token: token },
-    });
-  },
-  getProminentPoint(id: number) {
-    const token = Cookies.get("token");
-
-    return api.get({
-      path: `/prominent-point`,
+      path: `/chapter/${id}`,
       headers: { token: token },
     });
   },
 };
 
-export default LessonService;
+export default ChapterService;
