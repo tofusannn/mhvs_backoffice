@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Assessment,
   Book,
   Dashboard,
   LibraryBooks,
@@ -46,7 +47,7 @@ const NavBar = (props: Props) => {
     AuthService.logout().then((res: any) => {
       if (res.msg === "success") {
         Cookies.set("token", "");
-        router.push("/login");
+        router.push("/auth");
       }
     });
   }
@@ -96,6 +97,18 @@ const NavBar = (props: Props) => {
         link="/managements/homework"
         icon={<LibraryBooks fontSize="small" />}
       /> */}
+      <ListSubheader
+        component="div"
+        id="nested-list-subheader"
+        sx={{ fontSize: "16px" }}
+      >
+        Reports
+      </ListSubheader>
+      <ListItemButtonCT
+        title="Report"
+        link="/reports/report"
+        icon={<Assessment fontSize="small" />}
+      />
     </List>
   );
   return (
