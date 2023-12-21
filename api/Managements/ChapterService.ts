@@ -12,11 +12,11 @@ const ChapterService = {
       headers: { token: token },
     });
   },
-  getChapterList() {
+  getChapterByLessonId(id: number) {
     const token = Cookies.get("token");
 
     return api.get({
-      path: `/chapter`,
+      path: `/chapter/${id}`,
       headers: { token: token },
     });
   },

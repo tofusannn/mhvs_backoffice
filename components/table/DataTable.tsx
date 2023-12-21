@@ -9,8 +9,16 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useState } from "react";
-import { Button, Grid, TextField, Toolbar } from "@mui/material";
+import {
+  Button,
+  Grid,
+  MenuItem,
+  Stack,
+  TextField,
+  Toolbar,
+} from "@mui/material";
 import CUModal from "../modal/CUModal";
+import { ITypeLesson } from "@/redux/lesson/types";
 
 type Props = {
   children: React.ReactNode;
@@ -22,6 +30,8 @@ type Props = {
   setRowsPerPage: (rowsPerPage: number) => void;
   openDialog: (type: string) => void;
   searchFunction: (e: any) => void;
+  type?: string;
+  lessonList?: ITypeLesson[];
 };
 
 export default function DataTable({
@@ -34,6 +44,8 @@ export default function DataTable({
   setRowsPerPage,
   openDialog,
   searchFunction,
+  type,
+  lessonList,
 }: Props) {
   const handleChangePage = (event: any, newPage: number) => {
     setPage(newPage);
@@ -52,13 +64,40 @@ export default function DataTable({
         </Button>
       </Grid>
       <Paper sx={{ width: "100%", boxShadow: "none" }}>
-        <Box sx={{ padding: 2 }}>
-          <TextField
-            size="small"
-            placeholder="Search Firstname"
-            onChange={searchFunction}
-          />
-        </Box>
+        <Stack direction={"row"}>
+          <Box sx={{ padding: 2 }}>
+            <TextField
+              name="search_name"
+              size="small"
+              placeholder="Search Firstname"
+              onChange={searchFunction}
+            />
+          </Box>
+          <Box
+            sx={{ width: "20%", padding: 2, display: type ? "block" : "none" }}
+          >
+            <TextField
+              name="lesson_id"
+              select
+              fullWidth
+              size="small"
+              placeholder="Search Lesson"
+              onChange={searchFunction}
+              helperText={
+                countData === 0 && (
+                  <span style={{ color: "red" }}>*กรุณาเลือกบทเรียน</span>
+                )
+              }
+            >
+              {lessonList?.map((i) => (
+                <MenuItem key={i.id} value={i.id}>
+                  {i.lesson_name}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Box>
+        </Stack>
+
         <TableContainer sx={{ maxHeight: 440 }}>
           <Table stickyHeader sx={{ minWidth: 650 }}>
             <TableHead>

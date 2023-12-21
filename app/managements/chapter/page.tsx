@@ -26,6 +26,8 @@ import {
 import { Edit, Delete } from "@mui/icons-material";
 import { useFormik } from "formik";
 import CUModal from "@/components/modal/CUModal";
+import { ITypeLesson } from "@/redux/lesson/types";
+import LessonService from "@/api/Managements/LessonService";
 
 const headCells = [
   {
@@ -37,7 +39,7 @@ const headCells = [
     label: "Name",
   },
   {
-    id: "chapter_description",
+    id: "chapter_pre_description",
     label: "Description",
   },
   {
@@ -76,24 +78,24 @@ const ChapterManagementsPage = () => {
   const [openToast, setOpenToast] = useState(false);
   const [toastData, setToastData] = useState({ msg: "", status: false });
   const [search, setSearch] = useState("");
+  const [lessonList, setLessonList] = useState([]);
 
   useEffect(() => {
-    getAllChapterList();
+    getAllLessonList();
   }, []);
 
-  async function getAllChapterList() {
-    let respons = await ChapterService.getChapterList().then((res: any) => res);
+  async function getAllLessonList() {
+    let respons = await LessonService.getLessonList().then((res: any) => res);
     if (respons.status) {
-      respons = respons.result.sort((a: ITypeChapter, b: ITypeChapter) => {
-        return a.index - b.index;
+      respons = respons.result.sort((a: ITypeLesson, b: ITypeLesson) => {
+        return a.id - b.id;
       });
     } else {
       alert("Token Expire");
       Cookies.set("token", "");
       router.push("/auth");
     }
-
-    setDataList(respons);
+    setLessonList(respons);
   }
 
   function openDialog(params: string, rows?: any) {
@@ -101,7 +103,12 @@ const ChapterManagementsPage = () => {
       setOpenDelete(true);
       setIdDelete(rows.id);
     } else if (params === "edit") {
-      const fields = ["id", "chapter_name", "chapter_description", "lesson_id"];
+      const fields = [
+        "id",
+        "chapter_name",
+        "chapter_pre_description",
+        "lesson_id",
+      ];
       fields.forEach((field) => setFieldValue(field, rows[field], false));
       setType(params);
       setOpen(true);
@@ -204,13 +211,31 @@ const ChapterManagementsPage = () => {
     }
   }, [dataList, dataSearchList, page, rowsPerPage, search]);
 
-  function searchName(e: any) {
-    const name = e.target.value;
-    const newData = dataList.filter((i: ITypeChapter) =>
-      i.chapter_name.startsWith(name)
-    );
-    setSearch(name);
-    setDataSearchList(newData);
+  async function searchName(e: any) {
+    const name = e.target.name;
+    const value = e.target.value;
+    if (name === "search_name") {
+      const newData = dataList.filter((i: ITypeChapter) =>
+        i.chapter_name.startsWith(value)
+      );
+      setDataSearchList(newData);
+    } else {
+      let respons = await ChapterService.getChapterByLessonId(value).then(
+        (res: any) => res
+      );
+      if (respons.status) {
+        respons = respons.result.sort((a: ITypeLesson, b: ITypeLesson) => {
+          return a.id - b.id;
+        });
+      } else {
+        alert("Token Expire");
+        Cookies.set("token", "");
+        router.push("/auth");
+      }
+      setDataList(respons);
+      setDataSearchList(respons);
+    }
+    setSearch(value);
   }
 
   return (
@@ -225,6 +250,8 @@ const ChapterManagementsPage = () => {
         setRowsPerPage={setRowsPerPage}
         openDialog={openDialog}
         searchFunction={searchName}
+        type={"chapter"}
+        lessonList={lessonList}
       >
         <TableBody>
           {visibleRows.map((row: ITypeChapter, index: number) => {
@@ -249,7 +276,7 @@ const ChapterManagementsPage = () => {
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {row.chapter_description}
+                  {row.chapter_pre_description}
                 </TableCell>
                 <TableCell>{row.lesson_id}</TableCell>
                 <TableCell>
@@ -319,24 +346,24 @@ const ChapterManagementsPage = () => {
                   รายละเอียด<span style={{ color: "red" }}>*</span>
                 </Typography>
                 <TextField
-                  id="chapter_description"
-                  name="chapter_description"
+                  id="chapter_pre_description"
+                  name="chapter_pre_description"
                   sx={{ width: "50%" }}
                   multiline
                   rows={10}
                   fullWidth
                   size="small"
-                  value={values.chapter_description}
+                  value={values.chapter_pre_description}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   error={
-                    touched.chapter_description &&
-                    Boolean(errors.chapter_description)
+                    touched.chapter_pre_description &&
+                    Boolean(errors.chapter_pre_description)
                   }
                   helperText={
-                    touched.chapter_description &&
-                    Boolean(errors.chapter_description) &&
-                    errors.chapter_description
+                    touched.chapter_pre_description &&
+                    Boolean(errors.chapter_pre_description) &&
+                    errors.chapter_pre_description
                   }
                 ></TextField>
               </Grid>

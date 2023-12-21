@@ -13,6 +13,7 @@ import {
   DialogContent,
   Grid,
   IconButton,
+  MenuItem,
   TableBody,
   TableCell,
   TableRow,
@@ -65,6 +66,18 @@ const initialValues: ITypeUser = {
   date_of_birth: "2023-12-01",
   img_id: 0,
 };
+
+const nationalityList = [
+  { label: "Thai", value: "thai" },
+  { label: "Myanmar", value: "myanmar" },
+  { label: "Cambodia", value: "cambodia" },
+  { label: "Laos", value: "laos" },
+];
+
+const genderList = [
+  { label: "Male", value: "male" },
+  { label: "Female", value: "female" },
+];
 
 const UserManagementsPage = () => {
   const router = useRouter();
@@ -366,6 +379,7 @@ const UserManagementsPage = () => {
                   เชื้อชาติ<span style={{ color: "red" }}>*</span>
                 </Typography>
                 <TextField
+                  select
                   id="nationality"
                   sx={{ width: "50%" }}
                   fullWidth
@@ -379,13 +393,20 @@ const UserManagementsPage = () => {
                     Boolean(errors.nationality) &&
                     errors.nationality
                   }
-                ></TextField>
+                >
+                  {nationalityList.map((i) => (
+                    <MenuItem key={i.value} value={i.value}>
+                      {i.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
               </Grid>
               <Grid container justifyContent={"space-between"}>
                 <Typography>
                   เพศ<span style={{ color: "red" }}>*</span>
                 </Typography>
                 <TextField
+                  select
                   id="gender"
                   sx={{ width: "50%" }}
                   fullWidth
@@ -397,7 +418,13 @@ const UserManagementsPage = () => {
                   helperText={
                     touched.gender && Boolean(errors.gender) && errors.gender
                   }
-                ></TextField>
+                >
+                  {genderList.map((i) => (
+                    <MenuItem key={i.value} value={i.value}>
+                      {i.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
               </Grid>
               <Grid container justifyContent={"space-between"}>
                 <Typography>
