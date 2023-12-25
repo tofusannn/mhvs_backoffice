@@ -272,9 +272,9 @@ const LessonManagementsPage = () => {
                 </TableCell>
                 <TableCell>{getLanguage(row.language)}</TableCell>
                 <TableCell>
-                  <IconButton onClick={() => openDialog("edit", row)}>
+                  {/* <IconButton onClick={() => openDialog("edit", row)}>
                     <Edit />
-                  </IconButton>
+                  </IconButton> */}
                   <IconButton onClick={() => openDialog("delete", row)}>
                     <Delete />
                   </IconButton>

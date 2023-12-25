@@ -32,6 +32,7 @@ type Props = {
   searchFunction: (e: any) => void;
   type?: string;
   lessonList?: ITypeLesson[];
+  languageList?: { label: string; value: string }[];
 };
 
 export default function DataTable({
@@ -46,6 +47,7 @@ export default function DataTable({
   searchFunction,
   type,
   lessonList,
+  languageList,
 }: Props) {
   const handleChangePage = (event: any, newPage: number) => {
     setPage(newPage);
@@ -59,7 +61,11 @@ export default function DataTable({
   return (
     <Box sx={{ width: "100%" }}>
       <Grid container justifyContent={"end"} mb={2}>
-        <Button variant="contained" onClick={() => openDialog("create")}>
+        <Button
+          sx={{ display: type === "approve" ? "none" : "flex" }}
+          variant="contained"
+          onClick={() => openDialog("create")}
+        >
           Create
         </Button>
       </Grid>
@@ -77,23 +83,35 @@ export default function DataTable({
             sx={{ width: "20%", padding: 2, display: type ? "block" : "none" }}
           >
             <TextField
-              name="lesson_id"
+              name={type === "chapter" ? "lesson_id" : "language"}
               select
               fullWidth
               size="small"
-              placeholder="Search Lesson"
+              placeholder={
+                type === "chapter" ? "Search Lesson" : "Search Language"
+              }
               onChange={searchFunction}
               helperText={
                 countData === 0 && (
-                  <span style={{ color: "red" }}>*กรุณาเลือกบทเรียน</span>
+                  <span style={{ color: "red" }}>
+                    {type === "chapter" && "*กรุณาเลือกบทเรียน"}
+                    {type === "approve" && "*กรุณาเลือกภาษา"}
+                  </span>
                 )
               }
             >
-              {lessonList?.map((i) => (
-                <MenuItem key={i.id} value={i.id}>
-                  {i.lesson_name}
-                </MenuItem>
-              ))}
+              {type === "chapter" &&
+                lessonList?.map((i) => (
+                  <MenuItem key={i.id} value={i.id}>
+                    {i.lesson_name}
+                  </MenuItem>
+                ))}
+              {type === "approve" &&
+                languageList?.map((i) => (
+                  <MenuItem key={i.value} value={i.value}>
+                    {i.label}
+                  </MenuItem>
+                ))}
             </TextField>
           </Box>
         </Stack>

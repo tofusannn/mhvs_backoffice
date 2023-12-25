@@ -48,6 +48,10 @@ const NavBar = (props: Props) => {
       if (res.msg === "success") {
         Cookies.set("token", "");
         router.push("/auth");
+      } else {
+        alert("Token Expire");
+        Cookies.set("token", "");
+        router.push("/auth");
       }
     });
   }
@@ -92,11 +96,11 @@ const NavBar = (props: Props) => {
         link="/managements/chapter"
         icon={<MenuBook fontSize="small" />}
       />
-      {/* <ListItemButtonCT
-        title="Homework"
-        link="/managements/homework"
+      <ListItemButtonCT
+        title="Approve User Homework"
+        link="/managements/approve_user_homework"
         icon={<LibraryBooks fontSize="small" />}
-      /> */}
+      />
       <ListSubheader
         component="div"
         id="nested-list-subheader"
@@ -135,6 +139,7 @@ const NavBar = (props: Props) => {
             <Typography variant="h6" noWrap component="div">
               MHVS Backoffice
             </Typography>
+            <Typography>{Cookies.get("token")}</Typography>
             <Button sx={{ color: "#fff" }} onClick={() => logoutUser()}>
               Logout
             </Button>

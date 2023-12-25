@@ -11,6 +11,7 @@ import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import DataTable from "@/components/table/DataTable";
 import {
+  Box,
   Button,
   DialogActions,
   DialogContent,
@@ -23,7 +24,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Edit, Delete } from "@mui/icons-material";
+import { Edit, Delete, Close } from "@mui/icons-material";
 import { useFormik } from "formik";
 import CUModal from "@/components/modal/CUModal";
 import { ITypeLesson } from "@/redux/lesson/types";
@@ -56,11 +57,54 @@ const initialValues: ITypeChapter = {
   chapter_pre_description: "",
   display: true,
   practical: false,
-  pre_test: 0,
-  post_test: 0,
-  video: 0,
-  file: 0,
-  homework: 0,
+  pre_test: {
+    id: 0,
+    name: "",
+    description: "",
+    test_id: 0,
+    test_type: "",
+    display: false,
+    user_action: false,
+  },
+  post_test: {
+    id: 0,
+    name: "",
+    description: "",
+    test_id: 0,
+    test_type: "",
+    display: false,
+    user_action: false,
+  },
+  video: {
+    id: 0,
+    name: "",
+    description: "",
+    display: false,
+    user_action: false,
+    link: [
+      {
+        index: 0,
+        name: "",
+        description: "",
+        link: "",
+      },
+    ],
+  },
+  // file: {
+  //   id: 0,
+  //   name: "",
+  //   description: "",
+  //   display: false,
+  //   user_action: false,
+  //   file: [],
+  // },
+  homework: {
+    id: 0,
+    name: "",
+    description: "",
+    display: false,
+    user_action: false,
+  },
 };
 
 const ChapterManagementsPage = () => {
@@ -78,7 +122,7 @@ const ChapterManagementsPage = () => {
   const [openToast, setOpenToast] = useState(false);
   const [toastData, setToastData] = useState({ msg: "", status: false });
   const [search, setSearch] = useState("");
-  const [lessonList, setLessonList] = useState([]);
+  const [lessonList, setLessonList] = useState<ITypeLesson[]>([]);
 
   useEffect(() => {
     getAllLessonList();
@@ -101,13 +145,18 @@ const ChapterManagementsPage = () => {
   function openDialog(params: string, rows?: any) {
     if (params === "delete") {
       setOpenDelete(true);
-      setIdDelete(rows.id);
+      setIdDelete(rows.index);
     } else if (params === "edit") {
       const fields = [
-        "id",
+        "index",
         "chapter_name",
         "chapter_pre_description",
         "lesson_id",
+        "pre_test",
+        "post_test",
+        "video",
+        "file",
+        "homework",
       ];
       fields.forEach((field) => setFieldValue(field, rows[field], false));
       setType(params);
@@ -142,7 +191,7 @@ const ChapterManagementsPage = () => {
     pre_test: yup.string().required("pre_test Id is required"),
     post_test: yup.string().required("post_test Id is required"),
     video: yup.string().required("video Id is required"),
-    file: yup.string().required("file Id is required"),
+    // file: yup.string().required("file Id is required"),
     homework: yup.string().required("homework Id is required"),
   });
 
@@ -224,8 +273,8 @@ const ChapterManagementsPage = () => {
         (res: any) => res
       );
       if (respons.status) {
-        respons = respons.result.sort((a: ITypeLesson, b: ITypeLesson) => {
-          return a.id - b.id;
+        respons = respons.result.sort((a: ITypeChapter, b: ITypeChapter) => {
+          return a.index - b.index;
         });
       } else {
         alert("Token Expire");
@@ -280,9 +329,9 @@ const ChapterManagementsPage = () => {
                 </TableCell>
                 <TableCell>{row.lesson_id}</TableCell>
                 <TableCell>
-                  <IconButton onClick={() => openDialog("edit", row)}>
+                  {/* <IconButton onClick={() => openDialog("edit", row)}>
                     <Edit />
-                  </IconButton>
+                  </IconButton> */}
                   <IconButton onClick={() => openDialog("delete", row)}>
                     <Delete />
                   </IconButton>
@@ -311,6 +360,56 @@ const ChapterManagementsPage = () => {
         <form onSubmit={handleSubmit}>
           <DialogContent>
             <Grid container gap={2}>
+              <Grid container justifyContent={"space-between"}>
+                <Typography>
+                  บทเรียน<span style={{ color: "red" }}>*</span>
+                </Typography>
+                <TextField
+                  select
+                  id="lesson_id"
+                  name="lesson_id"
+                  sx={{ width: "50%" }}
+                  fullWidth
+                  size="small"
+                  value={values.lesson_id}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.lesson_id && Boolean(errors.lesson_id)}
+                  helperText={
+                    touched.lesson_id &&
+                    Boolean(errors.lesson_id) &&
+                    errors.lesson_id
+                  }
+                >
+                  {lessonList?.map((i) => (
+                    <MenuItem key={i.id} value={i.id}>
+                      {i.lesson_name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid container justifyContent={"space-between"}>
+                <Typography>
+                  homework<span style={{ color: "red" }}>*</span>
+                </Typography>
+                <TextField
+                  select
+                  id="homework"
+                  name="homework"
+                  sx={{ width: "50%" }}
+                  fullWidth
+                  size="small"
+                  value={values.homework.id}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.homework?.id && Boolean(errors.homework?.id)}
+                  helperText={
+                    touched.homework?.id &&
+                    Boolean(errors.homework?.id) &&
+                    errors.homework?.id
+                  }
+                ></TextField>
+              </Grid>
               <Grid container justifyContent={"space-between"}>
                 <TextField
                   sx={{ display: "none" }}
@@ -343,7 +442,7 @@ const ChapterManagementsPage = () => {
               </Grid>
               <Grid container justifyContent={"space-between"}>
                 <Typography>
-                  รายละเอียด<span style={{ color: "red" }}>*</span>
+                  รายละเอียดโดยย่อ<span style={{ color: "red" }}>*</span>
                 </Typography>
                 <TextField
                   id="chapter_pre_description"
@@ -369,22 +468,27 @@ const ChapterManagementsPage = () => {
               </Grid>
               <Grid container justifyContent={"space-between"}>
                 <Typography>
-                  บทเรียน<span style={{ color: "red" }}>*</span>
+                  รายละเอียด<span style={{ color: "red" }}>*</span>
                 </Typography>
                 <TextField
-                  id="lesson_id"
-                  name="lesson_id"
+                  id="chapter_description"
+                  name="chapter_description"
                   sx={{ width: "50%" }}
+                  multiline
+                  rows={10}
                   fullWidth
                   size="small"
-                  value={values.lesson_id}
+                  value={values.chapter_description}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={touched.lesson_id && Boolean(errors.lesson_id)}
+                  error={
+                    touched.chapter_description &&
+                    Boolean(errors.chapter_description)
+                  }
                   helperText={
-                    touched.lesson_id &&
-                    Boolean(errors.lesson_id) &&
-                    errors.lesson_id
+                    touched.chapter_description &&
+                    Boolean(errors.chapter_description) &&
+                    errors.chapter_description
                   }
                 ></TextField>
               </Grid>
@@ -392,106 +496,254 @@ const ChapterManagementsPage = () => {
                 <Typography>
                   pre_test<span style={{ color: "red" }}>*</span>
                 </Typography>
-                <TextField
-                  id="pre_test"
-                  name="pre_test"
-                  sx={{ width: "50%" }}
-                  fullWidth
-                  size="small"
-                  value={values.pre_test}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.pre_test && Boolean(errors.pre_test)}
-                  helperText={
-                    touched.pre_test &&
-                    Boolean(errors.pre_test) &&
-                    errors.pre_test
-                  }
-                ></TextField>
+                <Grid item xs={6}>
+                  <TextField
+                    label="หัวข้อ"
+                    sx={{ marginBottom: 2 }}
+                    id="pre_test.name"
+                    name="pre_test.name"
+                    fullWidth
+                    size="small"
+                    value={values.pre_test.name}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={
+                      touched.pre_test?.name && Boolean(errors.pre_test?.name)
+                    }
+                    helperText={
+                      touched.pre_test?.name &&
+                      Boolean(errors.pre_test?.name) &&
+                      errors.pre_test?.name
+                    }
+                  ></TextField>
+                  <TextField
+                    label="รายละเอียด"
+                    sx={{ marginBottom: 2 }}
+                    id="pre_test.description"
+                    name="pre_test.description"
+                    fullWidth
+                    size="small"
+                    value={values.pre_test.description}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={
+                      touched.pre_test?.description &&
+                      Boolean(errors.pre_test?.description)
+                    }
+                    helperText={
+                      touched.pre_test?.description &&
+                      Boolean(errors.pre_test?.description) &&
+                      errors.pre_test?.description
+                    }
+                  ></TextField>
+                  <TextField
+                    select
+                    label="คำถาม"
+                    sx={{ marginBottom: 2 }}
+                    id="pre_test.test_id"
+                    name="pre_test.test_id"
+                    fullWidth
+                    size="small"
+                    value={values.pre_test.test_id}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={
+                      touched.pre_test?.test_id &&
+                      Boolean(errors.pre_test?.test_id)
+                    }
+                    helperText={
+                      touched.pre_test?.test_id &&
+                      Boolean(errors.pre_test?.test_id) &&
+                      errors.pre_test?.test_id
+                    }
+                  ></TextField>
+                </Grid>
               </Grid>
               <Grid container justifyContent={"space-between"}>
                 <Typography>
                   post_test<span style={{ color: "red" }}>*</span>
                 </Typography>
-                <TextField
-                  id="post_test"
-                  name="post_test"
-                  sx={{ width: "50%" }}
-                  fullWidth
-                  size="small"
-                  value={values.post_test}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.post_test && Boolean(errors.post_test)}
-                  helperText={
-                    touched.post_test &&
-                    Boolean(errors.post_test) &&
-                    errors.post_test
-                  }
-                ></TextField>
+                <Grid item xs={6}>
+                  <TextField
+                    label="หัวข้อ"
+                    sx={{ marginBottom: 2 }}
+                    id="post_test.name"
+                    name="post_test.name"
+                    fullWidth
+                    size="small"
+                    value={values.post_test.name}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={
+                      touched.post_test?.name && Boolean(errors.post_test?.name)
+                    }
+                    helperText={
+                      touched.post_test?.name &&
+                      Boolean(errors.post_test?.name) &&
+                      errors.post_test?.name
+                    }
+                  ></TextField>
+                  <TextField
+                    label="รายละเอียด"
+                    sx={{ marginBottom: 2 }}
+                    id="post_test.description"
+                    name="post_test.description"
+                    fullWidth
+                    size="small"
+                    value={values.post_test.description}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={
+                      touched.post_test?.description &&
+                      Boolean(errors.post_test?.description)
+                    }
+                    helperText={
+                      touched.post_test?.description &&
+                      Boolean(errors.post_test?.description) &&
+                      errors.post_test?.description
+                    }
+                  ></TextField>
+                  <TextField
+                    select
+                    label="คำถาม"
+                    sx={{ marginBottom: 2 }}
+                    id="post_test.test_id"
+                    name="post_test.test_id"
+                    fullWidth
+                    size="small"
+                    value={values.post_test.test_id}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={
+                      touched.post_test?.test_id &&
+                      Boolean(errors.post_test?.test_id)
+                    }
+                    helperText={
+                      touched.post_test?.test_id &&
+                      Boolean(errors.post_test?.test_id) &&
+                      errors.post_test?.test_id
+                    }
+                  ></TextField>
+                </Grid>
               </Grid>
               <Grid container justifyContent={"space-between"}>
                 <Typography>
                   video<span style={{ color: "red" }}>*</span>
                 </Typography>
-                <TextField
-                  id="lesson_id"
-                  name="lesson_id"
-                  sx={{ width: "50%" }}
-                  fullWidth
-                  size="small"
-                  value={values.lesson_id}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.lesson_id && Boolean(errors.lesson_id)}
-                  helperText={
-                    touched.lesson_id &&
-                    Boolean(errors.lesson_id) &&
-                    errors.lesson_id
-                  }
-                ></TextField>
-              </Grid>
-              <Grid container justifyContent={"space-between"}>
-                <Typography>
-                  file<span style={{ color: "red" }}>*</span>
-                </Typography>
-                <TextField
-                  id="lesson_id"
-                  name="lesson_id"
-                  sx={{ width: "50%" }}
-                  fullWidth
-                  size="small"
-                  value={values.lesson_id}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.lesson_id && Boolean(errors.lesson_id)}
-                  helperText={
-                    touched.lesson_id &&
-                    Boolean(errors.lesson_id) &&
-                    errors.lesson_id
-                  }
-                ></TextField>
-              </Grid>
-              <Grid container justifyContent={"space-between"}>
-                <Typography>
-                  homework<span style={{ color: "red" }}>*</span>
-                </Typography>
-                <TextField
-                  id="lesson_id"
-                  name="lesson_id"
-                  sx={{ width: "50%" }}
-                  fullWidth
-                  size="small"
-                  value={values.lesson_id}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.lesson_id && Boolean(errors.lesson_id)}
-                  helperText={
-                    touched.lesson_id &&
-                    Boolean(errors.lesson_id) &&
-                    errors.lesson_id
-                  }
-                ></TextField>
+                <Grid item xs={6}>
+                  <TextField
+                    label="หัวข้อ"
+                    sx={{ marginBottom: 2 }}
+                    id="video.name"
+                    name="video.name"
+                    fullWidth
+                    size="small"
+                    value={values.video.name}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.video?.name && Boolean(errors.video?.name)}
+                    helperText={
+                      touched.video?.name &&
+                      Boolean(errors.video?.name) &&
+                      errors.video?.name
+                    }
+                  ></TextField>
+                  <TextField
+                    label="รายละเอียด"
+                    sx={{ marginBottom: 2 }}
+                    id="video.description"
+                    name="video.description"
+                    fullWidth
+                    size="small"
+                    value={values.video.description}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={
+                      touched.video?.description &&
+                      Boolean(errors.video?.description)
+                    }
+                    helperText={
+                      touched.video?.description &&
+                      Boolean(errors.video?.description) &&
+                      errors.video?.description
+                    }
+                  ></TextField>
+                  <div>
+                    <Grid
+                      container
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography>video 1:</Typography>
+                      <IconButton>
+                        <Close />
+                      </IconButton>
+                    </Grid>
+                    <TextField
+                      label="หัวข้อ"
+                      sx={{ marginY: 2 }}
+                      id="video.link.name"
+                      name="video.link.name"
+                      fullWidth
+                      size="small"
+                      value={values.video.link[0].name}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      // error={touched.video?.link.name && Boolean(errors.video?.link.name)}
+                      // helperText={
+                      //   touched.video?.link.name &&
+                      //   Boolean(errors.video?.link.name) &&
+                      //   errors.video?.link.name
+                      // }
+                    ></TextField>
+                    <TextField
+                      label="รายละเอียด"
+                      sx={{ marginBottom: 2 }}
+                      id="video.link.description"
+                      name="video.link.description"
+                      fullWidth
+                      size="small"
+                      value={values.video.link[0].description}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      // error={
+                      //   touched.video?.link.description &&
+                      //   Boolean(errors.video?.link.description)
+                      // }
+                      // helperText={
+                      //   touched.video?.link.description &&
+                      //   Boolean(errors.video?.link.description) &&
+                      //   errors.video?.link.description
+                      // }
+                    ></TextField>
+                    <TextField
+                      label="Link"
+                      sx={{ marginBottom: 2 }}
+                      id="video.link[0].link"
+                      name="video.link[0].link"
+                      fullWidth
+                      size="small"
+                      value={values.video.link[0].link}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      // error={
+                      //   touched.video?.link[0].link &&
+                      //   Boolean(errors.video?.link[0].link)
+                      // }
+                      // helperText={
+                      //   touched.video?.link[0].link &&
+                      //   Boolean(errors.video?.link[0].link) &&
+                      //   errors.video?.link[0].link
+                      // }
+                    ></TextField>
+                  </div>
+                  <Button variant="outlined" fullWidth>
+                    +
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
           </DialogContent>

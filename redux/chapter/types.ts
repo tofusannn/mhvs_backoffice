@@ -6,33 +6,39 @@ export type ITypeChapter = {
   chapter_description: string;
   display: true;
   practical: false;
-  pre_test: number;
-  post_test: number;
-  video: number;
-  file: number;
-  homework: number;
+  pre_test: ITypePreTest;
+  post_test: ITypePostTest;
+  video: ITypeVideo;
+  // file: ITypeFile;
+  homework: ITypeHomework;
 };
 
 export type ITypePreTest = {
+  id: number;
   name: string;
   description: string;
   test_id: number;
   test_type: string;
-  display: true;
+  display: boolean;
+  user_action: boolean;
 };
 
 export type ITypePostTest = {
+  id: number;
   name: string;
   description: string;
   test_id: number;
   test_type: string;
-  display: true;
+  display: boolean;
+  user_action: boolean;
 };
 
 export type ITypeVideo = {
+  id: number;
   name: string;
   description: string;
-  display: true;
+  display: boolean;
+  user_action: boolean;
   link: [
     {
       index: number;
@@ -44,14 +50,18 @@ export type ITypeVideo = {
 };
 
 export type ITypeFile = {
+  id: number;
   name: string;
   description: string;
-  display: false;
+  display: boolean;
+  user_action: boolean;
   file: [];
 };
 
 export type ITypeHomework = {
+  id: number;
   name: string;
   description: string;
-  display: false;
+  display: boolean;
+  user_action: boolean;
 };

@@ -1,12 +1,14 @@
+import DashboardService from "@/api/DashboardService";
 import UserService from "@/api/Managements/UserService";
 import { CircularProgress, Grid, styled } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, Sector, ResponsiveContainer } from "recharts";
 
-const UserDashboard = () => {
+const ApproveCerDashboard = () => {
   const [reloadPage, setReloadPage] = useState(true);
   setTimeout(() => setReloadPage(false), 1000);
   const [nationality, setNationality] = useState([{ name: "", value: 0 }]);
+  const [totalData, setTotalData] = useState(0);
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
   useEffect(() => {
@@ -14,18 +16,19 @@ const UserDashboard = () => {
   }, []);
 
   async function getDashboardData() {
-    const data = await UserService.getUserList().then((res: any) => {
+    const data = await DashboardService.approveCer().then((res: any) => {
       return res.result;
     });
-    const thaiData = data.filter((i: any) => i.nationality === "thai");
-    const laosData = data.filter((i: any) => i.nationality === "laos");
-    const myanmarData = data.filter((i: any) => i.nationality === "myanmar");
-    const cambodiaData = data.filter((i: any) => i.nationality === "cambodia");
+    const thaiData = data.approved_th;
+    const laosData = data.approved_ls;
+    const myanmarData = data.approved_mm;
+    const cambodiaData = data.approved_cd;
+    setTotalData(data.approved_total);
     const newArray = [
-      { name: "Thailand", value: thaiData.length },
-      { name: "Laos", value: laosData.length },
-      { name: "Myanmar", value: myanmarData.length },
-      { name: "Cambodia", value: cambodiaData.length },
+      { name: "Thailand", value: thaiData },
+      { name: "Laos", value: laosData },
+      { name: "Myanmar", value: myanmarData },
+      { name: "Cambodia", value: cambodiaData },
     ];
     setNationality(newArray);
   }
@@ -57,8 +60,11 @@ const UserDashboard = () => {
 
     return (
       <g>
-        <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>
-          Nationality
+        <text x={cx} y={"46%"} dy={8} textAnchor="middle" fill={fill}>
+          Total
+        </text>
+        <text x={cx} y={"52%"} dy={8} textAnchor="middle" fill={fill}>
+          {totalData} Person
         </text>
         <Sector
           cx={cx}
@@ -139,7 +145,7 @@ const UserDashboard = () => {
   );
 };
 
-export default UserDashboard;
+export default ApproveCerDashboard;
 
 const Main = styled("div")(({ theme }) => ({
   display: "flex",
