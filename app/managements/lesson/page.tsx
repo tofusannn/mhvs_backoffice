@@ -134,9 +134,9 @@ const LessonManagementsPage = () => {
   }
 
   const validationSchema = yup.object({
-    lesson_name: yup.string().required("Lesson Name is required"),
-    lesson_description: yup.string().required("Lesson Description is required"),
-    language: yup.string().required("Language is required"),
+    lesson_name: yup.string().required("โปรดระบุ"),
+    lesson_description: yup.string().required("โปรดระบุ"),
+    language: yup.string().required("โปรดระบุ"),
   });
 
   const {

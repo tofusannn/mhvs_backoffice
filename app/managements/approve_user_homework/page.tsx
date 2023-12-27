@@ -151,6 +151,10 @@ const ApproveUserHomeworkPage = () => {
     }
   }, [dataList, dataSearchList, page, rowsPerPage, search]);
 
+  useEffect(() => {
+    searchName({ target: { name: "", value: "th" } });
+  }, []);
+
   function searchName(e: any) {
     const name = e.target.name;
     const value = e.target.value;

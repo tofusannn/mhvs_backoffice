@@ -90,6 +90,7 @@ export default function DataTable({
               placeholder={
                 type === "chapter" ? "Search Lesson" : "Search Language"
               }
+              value={type === "approve" && "th"}
               onChange={searchFunction}
               helperText={
                 countData === 0 && (

@@ -161,12 +161,16 @@ const UserManagementsPage = () => {
   }
 
   const validationSchema = yup.object({
-    pre_name: yup.string().required("Prename is required"),
-    first_name: yup.string().required("Firstname is required"),
+    pre_name: yup.string().required("โปรดระบุ"),
+    first_name: yup.string().required("โปรดระบุ"),
     last_name: yup.string(),
-    nationality: yup.string().required("Nationality is required"),
-    gender: yup.string().required("Gender is required"),
-    phone: yup.string().min(10).max(10).required("Phone is required"),
+    nationality: yup.string().required("โปรดระบุ"),
+    gender: yup.string().required("โปรดระบุ"),
+    phone: yup
+      .string()
+      .min(10, "โปรดระบุอย่างน้อย 10 ตัว")
+      .max(10, "โปรดระบุไม่เกิน 10 ตัว")
+      .required("โปรดระบุ"),
   });
 
   const {
@@ -355,9 +359,7 @@ const UserManagementsPage = () => {
                 ></TextField>
               </Grid>
               <Grid container justifyContent={"space-between"}>
-                <Typography>
-                  นามสกุล<span style={{ color: "red" }}>*</span>
-                </Typography>
+                <Typography>นามสกุล</Typography>
                 <TextField
                   id="last_name"
                   sx={{ width: "50%" }}
