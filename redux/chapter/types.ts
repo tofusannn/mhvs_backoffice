@@ -13,6 +13,46 @@ export type ITypeChapter = {
   homework: ITypeHomework;
 };
 
+export type ITypeChapterBody = {
+  lesson_id: number;
+  homework: {
+    name: string;
+    description: string;
+  };
+  chapters: ITypeChapterBodyChapter;
+};
+
+export type ITypeChapterBodyChapter = {
+  chapter_name: string;
+  chapter_pre_description: string;
+  chapter_description: string;
+  pre_test: ITypeChapterBodyPreTest;
+  post_test: ITypeChapterBodyPostTest;
+  video: ITypeChapterBodyVideo;
+}[];
+
+export type ITypeChapterBodyPreTest = {
+  name: string;
+  description: string;
+  test_id: number;
+};
+
+export type ITypeChapterBodyPostTest = {
+  name: string;
+  description: string;
+  test_id: number;
+};
+
+export type ITypeChapterBodyVideo = {
+  name: string;
+  description: string;
+  link: {
+    name: string;
+    description: string;
+    link: string;
+  }[];
+};
+
 export type ITypePreTest = {
   id: number;
   name: string;

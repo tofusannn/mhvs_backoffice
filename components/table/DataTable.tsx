@@ -28,11 +28,12 @@ type Props = {
   setPage: (page: number) => void;
   rowsPerPage: number;
   setRowsPerPage: (rowsPerPage: number) => void;
-  openDialog: (type: string) => void;
+  openDialog: (type: string, rows?: string) => void;
   searchFunction: (e: any) => void;
   type?: string;
   lessonList?: ITypeLesson[];
   languageList?: { label: string; value: string }[];
+  searchValue?: string;
 };
 
 export default function DataTable({
@@ -48,6 +49,7 @@ export default function DataTable({
   type,
   lessonList,
   languageList,
+  searchValue,
 }: Props) {
   const handleChangePage = (event: any, newPage: number) => {
     setPage(newPage);
@@ -61,13 +63,30 @@ export default function DataTable({
   return (
     <Box sx={{ width: "100%" }}>
       <Grid container justifyContent={"end"} mb={2}>
-        <Button
-          sx={{ display: type === "approve" ? "none" : "flex" }}
-          variant="contained"
-          onClick={() => openDialog("create")}
-        >
-          Create
-        </Button>
+        {type === "chapter" ? (
+          countData > 0 ? (
+            <Button
+              variant="contained"
+              onClick={() => openDialog("delete", searchValue)}
+            >
+              Delete
+            </Button>
+          ) : (
+            searchValue != "" && (
+              <Button variant="contained" onClick={() => openDialog("create")}>
+                Create
+              </Button>
+            )
+          )
+        ) : (
+          <Button
+            sx={{ display: type === "approve" ? "none" : "flex" }}
+            variant="contained"
+            onClick={() => openDialog("create")}
+          >
+            Create
+          </Button>
+        )}
       </Grid>
       <Paper sx={{ width: "100%", boxShadow: "none" }}>
         <Stack direction={"row"}>
@@ -90,10 +109,12 @@ export default function DataTable({
               placeholder={
                 type === "chapter" ? "Search Lesson" : "Search Language"
               }
-              value={type === "approve" && "th"}
+              value={
+                type === "approve" ? "th" : type === "chapter" && searchValue
+              }
               onChange={searchFunction}
               helperText={
-                countData === 0 && (
+                searchValue === "" && (
                   <span style={{ color: "red" }}>
                     {type === "chapter" && "*กรุณาเลือกบทเรียน"}
                     {type === "approve" && "*กรุณาเลือกภาษา"}

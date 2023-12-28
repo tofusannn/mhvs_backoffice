@@ -12,6 +12,7 @@ type Props = {
   title: string;
   link: string;
   icon: React.ReactElement<any>;
+  actions?: string;
 };
 
 const ListItemButtonCT = (props: Props) => {
@@ -26,12 +27,20 @@ const ListItemButtonCT = (props: Props) => {
     <ListItemButtonCustom
       onClick={() => selectMenu(props.link)}
       sx={{
-        backgroundColor: pathname === props.link ? "#72D0F872" : "#fff",
+        backgroundColor:
+          pathname === props.link ||
+          pathname === `${props.link}/${props.actions}`
+            ? "#72D0F872"
+            : "#fff",
       }}
     >
       <ColorBar
         sx={{
-          backgroundColor: pathname === props.link ? "#4fc3f7" : "#fff",
+          backgroundColor:
+            pathname === props.link ||
+            pathname === `${props.link}${props.actions}`
+              ? "#4fc3f7"
+              : "#fff",
         }}
       />
       <ListItemIcon sx={{ justifyContent: "center" }}>

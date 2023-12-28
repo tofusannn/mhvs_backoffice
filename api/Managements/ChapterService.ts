@@ -1,9 +1,9 @@
-import { ITypeChapter } from "@/redux/chapter/types";
+import { ITypeChapter, ITypeChapterBody } from "@/redux/chapter/types";
 import api from "../https_request";
 import Cookies from "js-cookie";
 
 const ChapterService = {
-  postChapter(data: ITypeChapter) {
+  postChapter(data: ITypeChapterBody) {
     const token = Cookies.get("token");
 
     return api.post({
