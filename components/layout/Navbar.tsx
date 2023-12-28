@@ -8,6 +8,7 @@ import {
   Menu,
   MenuBook,
   Person,
+  QuestionMark,
   Send,
 } from "@mui/icons-material";
 import {
@@ -101,6 +102,12 @@ const NavBar = (props: Props) => {
         title="Approve User Homework"
         link="/managements/approve_user_homework"
         icon={<LibraryBooks fontSize="small" />}
+      />
+      <ListItemButtonCT
+        title="Question"
+        link="/managements/question"
+        actions="create"
+        icon={<QuestionMark fontSize="small" />}
       />
       <ListSubheader
         component="div"

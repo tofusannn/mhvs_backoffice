@@ -124,7 +124,8 @@ const LessonManagementsPage = () => {
         setOpenDelete(false);
         setOpenToast(true);
         setToastData({ msg: res.msg, status: true });
-        location.reload();
+        getAllLessonList();
+        // location.reload();
       } else {
         setOpenDelete(false);
         setOpenToast(true);

@@ -151,7 +151,7 @@ const UserManagementsPage = () => {
         setOpenDelete(false);
         setOpenToast(true);
         setToastData({ msg: res.msg, status: true });
-        location.reload();
+        getAllUserList();
       } else {
         setOpenDelete(false);
         setOpenToast(true);
