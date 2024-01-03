@@ -1,10 +1,11 @@
 "use client";
 
 import * as yup from "yup";
-import Toast from "@/components/common/Toast";
 import HeaderText from "@/components/typography/HeaderText";
-import { ITypeQuestionBody } from "@/redux/question/type";
-import { AddCircleOutline, Close } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { ITypeQuestionCerBody } from "@/redux/question_cer/type";
+import Toast from "@/components/common/Toast";
 import {
   Box,
   Button,
@@ -20,34 +21,22 @@ import {
   Typography,
   styled,
 } from "@mui/material";
-import {
-  ErrorMessage,
-  Field,
-  FieldArray,
-  Form,
-  Formik,
-  getIn,
-  useFormik,
-} from "formik";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
 import QuestionService from "@/api/Managements/QuestionService";
+import { Close, AddCircleOutline } from "@mui/icons-material";
+import { Formik, Form, FieldArray, getIn } from "formik";
+import QuestionCerService from "@/api/Managements/QuestionCer";
 
 type Props = {};
 
-const initialValues: ITypeQuestionBody = {
+const initialValues: ITypeQuestionCerBody = {
   name: "",
   description: "",
-  estimate_score_pre: 0,
-  estimate_score_quiz: 0,
   question: [
     {
       question: "",
       answer: [
         {
           choice: "",
-          score: 0,
-          is_true: false,
           is_input: false,
         },
       ],
@@ -55,13 +44,11 @@ const initialValues: ITypeQuestionBody = {
   ],
 };
 
-const questionObj = {
+const questionCerObj = {
   question: "",
   answer: [
     {
       choice: "",
-      score: 0,
-      is_true: false,
       is_input: false,
     },
   ],
@@ -69,12 +56,10 @@ const questionObj = {
 
 const answerObj = {
   choice: "",
-  score: 0,
-  is_true: false,
   is_input: false,
 };
 
-const CreateQuestionPage = (props: Props) => {
+const CreateQuestionnairePage = (props: Props) => {
   const router = useRouter();
   const [openToast, setOpenToast] = useState(false);
   const [toastData, setToastData] = useState({ msg: "", status: false });
@@ -82,15 +67,12 @@ const CreateQuestionPage = (props: Props) => {
   const validationSchema = yup.object({
     name: yup.string().required("โปรดระบุ"),
     description: yup.string().required("โปรดระบุ"),
-    estimate_score_pre: yup.number().min(1, "โปรดระบุ").required("โปรดระบุ"),
-    estimate_score_quiz: yup.number().min(1, "โปรดระบุ").required("โปรดระบุ"),
     question: yup.array().of(
       yup.object().shape({
         question: yup.string().required("โปรดระบุ"),
         answer: yup.array().of(
           yup.object().shape({
             choice: yup.string().required("โปรดระบุ"),
-            score: yup.number().min(1, "โปรดระบุ").required("โปรดระบุ"),
           })
         ),
       })
@@ -99,18 +81,18 @@ const CreateQuestionPage = (props: Props) => {
 
   return (
     <div>
-      <HeaderText title="Create Question" />
+      <HeaderText title="Create Questionnaire" />
       <Box sx={{ position: "relative", marginTop: 3 }}>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={(values) => {
-            QuestionService.postQuestion(values).then((res: any) => {
+            QuestionCerService.postQuestionCer(values).then((res: any) => {
               if (res.msg === "success") {
                 setOpenToast(true);
                 setToastData({ msg: res.msg, status: true });
                 setTimeout(() => {
-                  router.push("/managements/question");
+                  router.push("/managements/question_cer");
                 }, 1000);
               } else {
                 setOpenToast(true);
@@ -153,7 +135,7 @@ const CreateQuestionPage = (props: Props) => {
                                     backgroundColor: "skyblue",
                                   }}
                                 >
-                                  <TitleText>Question Header</TitleText>
+                                  <TitleText>Questionnaire Header</TitleText>
                                 </Box>
                               </Stack>
                             </CardContent>
@@ -204,54 +186,6 @@ const CreateQuestionPage = (props: Props) => {
                                     />
                                   </Stack>
                                 </Stack>
-                                <Stack
-                                  direction={"row"}
-                                  justifyContent={"space-between"}
-                                  alignItems={"start"}
-                                >
-                                  <TitleTextField>
-                                    estimate_score_pre
-                                    <span style={{ color: "red" }}>*</span>
-                                  </TitleTextField>
-                                  <Stack spacing={2}>
-                                    <TextField
-                                      label="estimate_score_pre"
-                                      sx={{ width: 345 }}
-                                      fullWidth
-                                      size="small"
-                                      type="number"
-                                      {...getFieldProps(`estimate_score_pre`)}
-                                      error={errorFields(`estimate_score_pre`)}
-                                      helperText={errorFields(
-                                        `estimate_score_pre`
-                                      )}
-                                    />
-                                  </Stack>
-                                </Stack>
-                                <Stack
-                                  direction={"row"}
-                                  justifyContent={"space-between"}
-                                  alignItems={"start"}
-                                >
-                                  <TitleTextField>
-                                    estimate_score_quiz
-                                    <span style={{ color: "red" }}>*</span>
-                                  </TitleTextField>
-                                  <Stack spacing={2}>
-                                    <TextField
-                                      label="estimate_score_quiz"
-                                      sx={{ width: 345 }}
-                                      fullWidth
-                                      size="small"
-                                      type="number"
-                                      {...getFieldProps(`estimate_score_quiz`)}
-                                      error={errorFields(`estimate_score_quiz`)}
-                                      helperText={errorFields(
-                                        `estimate_score_quiz`
-                                      )}
-                                    />
-                                  </Stack>
-                                </Stack>
                               </Stack>
                             </CardContent>
                             <CardContent>
@@ -274,7 +208,9 @@ const CreateQuestionPage = (props: Props) => {
                                         backgroundColor: "skyblue",
                                       }}
                                     >
-                                      <TitleText>Question {idx + 1}</TitleText>
+                                      <TitleText>
+                                        Questionnaire {idx + 1}
+                                      </TitleText>
                                     </Box>
                                     <IconButton
                                       style={{
@@ -380,55 +316,12 @@ const CreateQuestionPage = (props: Props) => {
                                                           `question.${idx}.answer.${idx2}.choice`
                                                         )}
                                                       />
-                                                      <TextField
-                                                        label="คะแนน"
-                                                        sx={{ width: 345 }}
-                                                        fullWidth
-                                                        size="small"
-                                                        type="number"
-                                                        {...getFieldProps(
-                                                          `question.${idx}.answer.${idx2}.score`
-                                                        )}
-                                                        error={errorFields(
-                                                          `question.${idx}.answer.${idx2}.score`
-                                                        )}
-                                                        helperText={errorFields(
-                                                          `question.${idx}.answer.${idx2}.score`
-                                                        )}
-                                                      />
                                                       <FormGroup
                                                         sx={{
                                                           alignItems: "start",
                                                         }}
                                                         row
                                                       >
-                                                        <FormControlLabel
-                                                          componentsProps={{
-                                                            typography: {
-                                                              fontWeight: 600,
-                                                              fontSize: 16,
-                                                            },
-                                                          }}
-                                                          labelPlacement="start"
-                                                          control={
-                                                            <Switch
-                                                              {...getFieldProps(
-                                                                `question.${idx}.answer.${idx2}.is_true`
-                                                              )}
-                                                              onChange={
-                                                                handleChange
-                                                              }
-                                                            />
-                                                          }
-                                                          label="is_true"
-                                                        />
-                                                        <Divider
-                                                          sx={{
-                                                            marginLeft: "16px",
-                                                          }}
-                                                          orientation="vertical"
-                                                          flexItem
-                                                        ></Divider>
                                                         <FormControlLabel
                                                           componentsProps={{
                                                             typography: {
@@ -484,7 +377,7 @@ const CreateQuestionPage = (props: Props) => {
                             }}
                             fullWidth
                             variant="contained"
-                            onClick={() => arrayHelpers.push(questionObj)}
+                            onClick={() => arrayHelpers.push(questionCerObj)}
                           >
                             <AddCircleOutline color="info" />
                           </Button>
@@ -521,7 +414,7 @@ const CreateQuestionPage = (props: Props) => {
   );
 };
 
-export default CreateQuestionPage;
+export default CreateQuestionnairePage;
 
 const TitleText = styled(Typography)({
   fontWeight: 600,
