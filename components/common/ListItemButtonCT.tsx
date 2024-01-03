@@ -21,6 +21,11 @@ const ListItemButtonCT = (props: Props) => {
 
   function selectMenu(link: string) {
     push(link);
+    setTimeout(() => {
+      if (props.title === "Chapter") {
+        location.reload();
+      }
+    }, 100);
   }
 
   return (

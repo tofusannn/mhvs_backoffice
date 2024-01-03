@@ -159,7 +159,9 @@ const LessonManagementsPage = () => {
             setOpen(false);
             setOpenToast(true);
             setToastData({ msg: res.msg, status: true });
-            location.reload();
+            setTimeout(() => {
+              location.reload();
+            }, 1000);
           } else {
             setOpenToast(true);
             setToastData({ msg: res.msg, status: false });
@@ -171,7 +173,9 @@ const LessonManagementsPage = () => {
             setOpen(false);
             setOpenToast(true);
             setToastData({ msg: res.msg, status: true });
-            location.reload();
+            setTimeout(() => {
+              location.reload();
+            }, 1000);
           } else {
             setOpenToast(true);
             setToastData({ msg: res.msg, status: false });

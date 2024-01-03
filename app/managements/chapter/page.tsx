@@ -6,7 +6,7 @@ import { ITypeLesson } from "@/redux/lesson/types";
 import router from "next/router";
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import ChapterService from "@/api/Managements/ChapterService";
 import Toast from "@/components/common/Toast";
 import DModal from "@/components/modal/DModal";
@@ -48,9 +48,16 @@ const ChapterManagementsPage = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [openDelete, setOpenDelete] = useState(false);
   const [idDelete, setIdDelete] = useState(0);
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     getAllLessonList();
+    if (searchParams) {
+      let id = searchParams.get("id");
+      if (id) {
+        searchName({ target: { name: "", value: id } });
+      }
+    }
   }, []);
 
   async function getAllLessonList() {
@@ -114,6 +121,7 @@ const ChapterManagementsPage = () => {
       }
       setDataList(respons);
       setDataSearchList(respons);
+      router.replace(`/managements/chapter/?id=${value}`);
     }
     setSearch(value);
   }
@@ -133,7 +141,9 @@ const ChapterManagementsPage = () => {
         setOpenDelete(false);
         setOpenToast(true);
         setToastData({ msg: res.msg, status: true });
-        location.reload();
+        setTimeout(() => {
+          location.reload();
+        }, 1000);
       } else {
         setOpenDelete(false);
         setOpenToast(true);

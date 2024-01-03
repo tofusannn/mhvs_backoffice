@@ -147,7 +147,7 @@ const NavBar = (props: Props) => {
             <Typography variant="h6" noWrap component="div">
               MHVS Backoffice
             </Typography>
-            <Typography>{Cookies.get("token")}</Typography>
+            {/* <Typography>{Cookies.get("token")}</Typography> */}
             <Button sx={{ color: "#fff" }} onClick={() => logoutUser()}>
               Logout
             </Button>

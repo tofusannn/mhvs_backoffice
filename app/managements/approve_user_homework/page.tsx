@@ -105,7 +105,11 @@ const ApproveUserHomeworkPage = () => {
       }).then((res: any) => res);
       if (res.status) {
         setOpen(false);
-        location.reload();
+        setOpenToast(true);
+        setToastData({ msg: res.msg, status: true });
+        setTimeout(() => {
+          location.reload();
+        }, 1000);
       } else {
         alert("Token Expire");
         Cookies.set("token", "");
@@ -118,7 +122,11 @@ const ApproveUserHomeworkPage = () => {
       }).then((res: any) => res);
       if (res.status) {
         setOpen(false);
-        location.reload();
+        setOpenToast(true);
+        setToastData({ msg: res.msg, status: true });
+        setTimeout(() => {
+          location.reload();
+        }, 1000);
       } else {
         alert("Token Expire");
         Cookies.set("token", "");
