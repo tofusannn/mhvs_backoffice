@@ -8,10 +8,13 @@ import {
   ITypeUserQus,
 } from "@/redux/reports/types";
 import {
+  Box,
   Button,
   Card,
   CardContent,
   Grid,
+  MenuItem,
+  Paper,
   Stack,
   TextField,
   Typography,
@@ -20,28 +23,37 @@ import {
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import LessonService from "@/api/Managements/LessonService";
+import { ITypeLesson } from "@/redux/lesson/types";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
-let dataAns: ITypeUserAns = {
+const dataAns: ITypeUserAns = {
   start_date: "",
   end_date: "",
   quiz_type: "",
   lesson_id: "",
 };
 
-let dataLesson: ITypeUserLesson = {
+const dataLesson: ITypeUserLesson = {
   start_date: "",
   end_date: "",
   lesson_id: "",
 };
 
-let dataQus: ITypeUserQus = {
+const dataQus: ITypeUserQus = {
   start_date: "",
   end_date: "",
   lesson_id: "",
 };
+
+const quizList = [
+  { name: "Pre", value: "pre" },
+  { name: "Quiz", value: "quiz" },
+];
 
 function downloadCSV(res: any) {
   const url = window.URL.createObjectURL(new Blob([res]));
@@ -57,9 +69,29 @@ function downloadCSV(res: any) {
 }
 
 const ReportPage = (props: Props) => {
+  const router = useRouter();
   const [paramsAns, setParamsAns] = useState(dataAns);
   const [paramsLesson, setParamsLesson] = useState(dataLesson);
   const [paramsQus, setParamsQus] = useState(dataQus);
+  const [lessonList, setLessonList] = useState<ITypeLesson[]>([]);
+
+  useEffect(() => {
+    getAllLessonList();
+  }, []);
+
+  async function getAllLessonList() {
+    let respons = await LessonService.getLessonList().then((res: any) => res);
+    if (respons.status) {
+      respons = respons.result.sort((a: ITypeLesson, b: ITypeLesson) => {
+        return a.id - b.id;
+      });
+    } else {
+      alert("Token Expire");
+      Cookies.set("token", "");
+      router.push("/auth");
+    }
+    setLessonList(respons);
+  }
 
   function downloadFile(type: string) {
     switch (type) {
@@ -108,26 +140,52 @@ const ReportPage = (props: Props) => {
         <CardContent>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Title>User Answer</Title>
-            <Stack direction={"row"} spacing={2} my={2}>
-              <DatePicker
-                format="YYYY-MM-DD"
-                label="Start Date"
-                onChange={(e) => setParams(e, "start_date", "ans")}
-              />
-              <DatePicker
-                format="YYYY-MM-DD"
-                label="End Date"
-                onChange={(e) => setParams(e, "end_date", "ans")}
-              />
-              <TextField
-                label="Quiz Type"
-                onChange={(e) => setParams(e, "quiz_type", "ans")}
-              ></TextField>
-              <TextField
-                label="Lesson ID"
-                onChange={(e) => setParams(e, "lesson_id", "ans")}
-              ></TextField>
-            </Stack>
+            <Grid container columnGap={2} my={2}>
+              <Grid item xs={2.5}>
+                <DatePicker
+                  sx={{ width: "100%" }}
+                  format="YYYY-MM-DD"
+                  label="Start Date"
+                  onChange={(e) => setParams(e, "start_date", "ans")}
+                />
+              </Grid>
+              <Grid item xs={2.5}>
+                <DatePicker
+                  sx={{ width: "100%" }}
+                  format="YYYY-MM-DD"
+                  label="End Date"
+                  onChange={(e) => setParams(e, "end_date", "ans")}
+                />
+              </Grid>
+              <Grid item xs={2.5}>
+                <TextField
+                  select
+                  fullWidth
+                  label="Quiz Type"
+                  onChange={(e) => setParams(e, "quiz_type", "ans")}
+                >
+                  {quizList.map((i, index) => (
+                    <MenuItem key={index} value={i.value}>
+                      {i.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid item xs={2.5}>
+                <TextField
+                  select
+                  fullWidth
+                  label="Lesson ID"
+                  onChange={(e) => setParams(e, "lesson_id", "ans")}
+                >
+                  {lessonList.map((i, index) => (
+                    <MenuItem key={index} value={i.id}>
+                      {i.lesson_name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+            </Grid>
             <Button
               sx={{ marginBottom: 2 }}
               variant="contained"
@@ -136,22 +194,31 @@ const ReportPage = (props: Props) => {
               Submit
             </Button>
             <Title>User Lesson</Title>
-            <Stack direction={"row"} spacing={2} my={2}>
-              <DatePicker
-                format="YYYY-MM-DD"
-                label="Start Date"
-                onChange={(e) => setParams(e, "start_date", "lesson")}
-              />
-              <DatePicker
-                format="YYYY-MM-DD"
-                label="End Date"
-                onChange={(e) => setParams(e, "end_date", "lesson")}
-              />
-              <TextField
-                label="Lesson ID"
-                onChange={(e) => setParams(e, "lesson_id", "lesson")}
-              ></TextField>
-            </Stack>
+            <Grid container columnGap={2} my={2}>
+              <Grid item xs={2.5}>
+                <DatePicker
+                  sx={{ width: "100%" }}
+                  format="YYYY-MM-DD"
+                  label="Start Date"
+                  onChange={(e) => setParams(e, "start_date", "lesson")}
+                />
+              </Grid>
+              <Grid item xs={2.5}>
+                <DatePicker
+                  sx={{ width: "100%" }}
+                  format="YYYY-MM-DD"
+                  label="End Date"
+                  onChange={(e) => setParams(e, "end_date", "lesson")}
+                />
+              </Grid>
+              <Grid item xs={2.5}>
+                <TextField
+                  fullWidth
+                  label="Lesson ID"
+                  onChange={(e) => setParams(e, "lesson_id", "lesson")}
+                ></TextField>
+              </Grid>
+            </Grid>
             <Button
               sx={{ marginBottom: 2 }}
               variant="contained"
@@ -160,22 +227,31 @@ const ReportPage = (props: Props) => {
               Submit
             </Button>
             <Title>User Questionnaire</Title>
-            <Stack direction={"row"} spacing={2} my={2}>
-              <DatePicker
-                format="YYYY-MM-DD"
-                label="Start Date"
-                onChange={(e) => setParams(e, "start_date", "qus")}
-              />
-              <DatePicker
-                format="YYYY-MM-DD"
-                label="End Date"
-                onChange={(e) => setParams(e, "end_date", "qus")}
-              />
-              <TextField
-                label="Lesson ID"
-                onChange={(e) => setParams(e, "lesson_id", "qus")}
-              ></TextField>
-            </Stack>
+            <Grid container columnGap={2} my={2}>
+              <Grid item xs={2.5}>
+                <DatePicker
+                  sx={{ width: "100%" }}
+                  format="YYYY-MM-DD"
+                  label="Start Date"
+                  onChange={(e) => setParams(e, "start_date", "qus")}
+                />
+              </Grid>
+              <Grid item xs={2.5}>
+                <DatePicker
+                  sx={{ width: "100%" }}
+                  format="YYYY-MM-DD"
+                  label="End Date"
+                  onChange={(e) => setParams(e, "end_date", "qus")}
+                />
+              </Grid>
+              <Grid item xs={2.5}>
+                <TextField
+                  fullWidth
+                  label="Lesson ID"
+                  onChange={(e) => setParams(e, "lesson_id", "qus")}
+                ></TextField>
+              </Grid>
+            </Grid>
             <Button
               sx={{ marginBottom: 2 }}
               variant="contained"
