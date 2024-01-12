@@ -3,7 +3,7 @@
 import Toast from "@/components/common/Toast";
 import DataTable from "@/components/table/DataTable";
 import HeaderText from "@/components/typography/HeaderText";
-import { Delete } from "@mui/icons-material";
+import { Delete, Edit } from "@mui/icons-material";
 import { TableBody, TableRow, TableCell, IconButton } from "@mui/material";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -69,6 +69,8 @@ const QuestionManagementsPage = (props: Props) => {
     if (params === "delete") {
       setOpenDelete(true);
       setIdDelete(rows.id);
+    } else if (params === "edit") {
+      router.push(`/managements/question/create/?id=${rows.id}`);
     } else {
       router.push(`/managements/question/create`);
     }
@@ -162,9 +164,9 @@ const QuestionManagementsPage = (props: Props) => {
                   {row.description}
                 </TableCell>
                 <TableCell>
-                  {/* <IconButton onClick={() => openDialog("edit", row)}>
+                  <IconButton onClick={() => openDialog("edit", row)}>
                     <Edit />
-                  </IconButton> */}
+                  </IconButton>
                   <IconButton onClick={() => openDialog("delete", row)}>
                     <Delete />
                   </IconButton>

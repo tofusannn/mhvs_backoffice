@@ -79,6 +79,11 @@ const genderList = [
   { label: "Female", value: "female" },
 ];
 
+const preNameList = [
+  { label: "Mr.", value: "mr" },
+  { label: "Ms.", value: "ms" },
+];
+
 const UserManagementsPage = () => {
   const router = useRouter();
   const [dataList, setDataList] = useState([]);
@@ -282,9 +287,9 @@ const UserManagementsPage = () => {
                 </TableCell>
                 <TableCell>{row.phone}</TableCell>
                 <TableCell>
-                  {/* <IconButton onClick={() => openDialog("edit", row)}>
+                  <IconButton onClick={() => openDialog("edit", row)}>
                     <Edit />
-                  </IconButton> */}
+                  </IconButton>
                   <IconButton onClick={() => openDialog("delete", row)}>
                     <Delete />
                   </IconButton>
@@ -325,6 +330,7 @@ const UserManagementsPage = () => {
                   คำนำหน้า<span style={{ color: "red" }}>*</span>
                 </Typography>
                 <TextField
+                  select
                   id="pre_name"
                   name="pre_name"
                   sx={{ width: "50%" }}
@@ -339,7 +345,13 @@ const UserManagementsPage = () => {
                     Boolean(errors.pre_name) &&
                     errors.pre_name
                   }
-                ></TextField>
+                >
+                  {preNameList.map((i) => (
+                    <MenuItem key={i.value} value={i.value}>
+                      {i.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
               </Grid>
               <Grid container justifyContent={"space-between"}>
                 <Typography>

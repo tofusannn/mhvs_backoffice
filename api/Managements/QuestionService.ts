@@ -10,6 +10,13 @@ const QuestionService = {
       headers: { token: token },
     });
   },
+  getQuestionById(id: number) {
+    const token = Cookies.get("token");
+    return api.get({
+      path: `/question/${id}`,
+      headers: { token: token },
+    });
+  },
   postQuestion(data: ITypeQuestionBody) {
     const token = Cookies.get("token");
     return api.post({

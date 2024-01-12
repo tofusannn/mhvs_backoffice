@@ -5,7 +5,7 @@ import {
   ListItemText,
   styled,
 } from "@mui/material";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 
 type Props = {
@@ -18,14 +18,20 @@ type Props = {
 const ListItemButtonCT = (props: Props) => {
   const { push } = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   function selectMenu(link: string) {
     push(link);
-    setTimeout(() => {
-      if (props.title === "Chapter") {
-        location.reload();
+    if (searchParams) {
+      let id = searchParams.get("id");
+      if (id) {
+        setTimeout(() => {
+          if (props.title === "Chapter") {
+            location.reload();
+          }
+        }, 100);
       }
-    }, 100);
+    }
   }
 
   return (

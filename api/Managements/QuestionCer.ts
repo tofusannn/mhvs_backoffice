@@ -10,6 +10,13 @@ const QuestionCerService = {
       headers: { token: token },
     });
   },
+  getQuestionCerById(id: number) {
+    const token = Cookies.get("token");
+    return api.get({
+      path: `/questionnaire_cer/${id}`,
+      headers: { token: token },
+    });
+  },
   postQuestionCer(data: ITypeQuestionCerBody) {
     const token = Cookies.get("token");
     return api.post({

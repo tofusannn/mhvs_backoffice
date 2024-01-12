@@ -12,7 +12,7 @@ import Toast from "@/components/common/Toast";
 import DModal from "@/components/modal/DModal";
 import DataTable from "@/components/table/DataTable";
 import HeaderText from "@/components/typography/HeaderText";
-import { Delete } from "@mui/icons-material";
+import { Delete, Edit } from "@mui/icons-material";
 import { TableBody, TableRow, TableCell, IconButton } from "@mui/material";
 
 const headCells = [
@@ -195,9 +195,9 @@ const ChapterManagementsPage = () => {
                 </TableCell>
                 <TableCell>{row.lesson_id}</TableCell>
                 <TableCell>
-                  {/* <IconButton onClick={() => openDialog("edit", row)}>
-                <Edit />
-              </IconButton> */}
+                  <IconButton onClick={() => openDialog("edit", row)}>
+                    <Edit />
+                  </IconButton>
                 </TableCell>
               </TableRow>
             );
