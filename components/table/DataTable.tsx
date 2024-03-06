@@ -106,11 +106,16 @@ export default function DataTable({
               select
               fullWidth
               size="small"
+              defaultValue={""}
               placeholder={
                 type === "chapter" ? "Search Lesson" : "Search Language"
               }
               value={
-                type === "approve" ? "th" : type === "chapter" && searchValue
+                type === "approve"
+                  ? "th"
+                  : type === "chapter"
+                  ? searchValue
+                  : ""
               }
               onChange={searchFunction}
               helperText={

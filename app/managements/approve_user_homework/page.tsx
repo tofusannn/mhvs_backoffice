@@ -83,10 +83,6 @@ const ApproveUserHomeworkPage = () => {
       respons = respons.result.sort((a: ITypeApprove, b: ITypeApprove) => {
         return a.user_id - b.user_id;
       });
-    } else {
-      alert("Token Expire");
-      Cookies.set("token", "");
-      router.push("/auth");
     }
 
     setDataList(respons);
@@ -110,10 +106,6 @@ const ApproveUserHomeworkPage = () => {
         setTimeout(() => {
           location.reload();
         }, 1000);
-      } else {
-        alert("Token Expire");
-        Cookies.set("token", "");
-        router.push("/auth");
       }
     }
     if (type === "notApprove") {
@@ -127,10 +119,6 @@ const ApproveUserHomeworkPage = () => {
         setTimeout(() => {
           location.reload();
         }, 1000);
-      } else {
-        alert("Token Expire");
-        Cookies.set("token", "");
-        router.push("/auth");
       }
     }
   }

@@ -103,7 +103,7 @@ const CreateQuestionnairePage = (props: Props) => {
 
   return (
     <div>
-      <HeaderText title="Create Questionnaire" />
+      <HeaderText title={id ? "Edit Questionnaire" : "Create Questionnaire"} />
       {reloadPage ? (
         <Main>
           <CircularProgress />
@@ -111,7 +111,7 @@ const CreateQuestionnairePage = (props: Props) => {
       ) : (
         <Box sx={{ position: "relative", marginTop: 3 }}>
           <Formik
-            initialValues={initialValues}
+            initialValues={dataForm}
             validationSchema={validationSchema}
             onSubmit={(values) => {
               QuestionCerService.postQuestionCer(values).then((res: any) => {

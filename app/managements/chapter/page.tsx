@@ -66,10 +66,6 @@ const ChapterManagementsPage = () => {
       respons = respons.result.sort((a: ITypeLesson, b: ITypeLesson) => {
         return a.id - b.id;
       });
-    } else {
-      alert("Token Expire");
-      Cookies.set("token", "");
-      router.push("/auth");
     }
     setLessonList(respons);
   }
@@ -114,10 +110,6 @@ const ChapterManagementsPage = () => {
         respons = respons.result.sort((a: ITypeChapter, b: ITypeChapter) => {
           return a.index - b.index;
         });
-      } else {
-        alert("Token Expire");
-        Cookies.set("token", "");
-        router.push("/auth");
       }
       setDataList(respons);
       setDataSearchList(respons);

@@ -3,6 +3,7 @@
 import {
   Assessment,
   Book,
+  ContentCopy,
   Dashboard,
   LibraryBooks,
   Menu,
@@ -11,6 +12,7 @@ import {
   QuestionAnswer,
   QuestionMark,
   Send,
+  ViewCarousel,
 } from "@mui/icons-material";
 import {
   AppBar,
@@ -48,10 +50,6 @@ const NavBar = (props: Props) => {
   function logoutUser() {
     AuthService.logout().then((res: any) => {
       if (res.msg === "success") {
-        Cookies.set("token", "");
-        router.push("/auth");
-      } else {
-        alert("Token Expire");
         Cookies.set("token", "");
         router.push("/auth");
       }
@@ -115,6 +113,16 @@ const NavBar = (props: Props) => {
         link="/managements/question_cer"
         actions="create"
         icon={<QuestionAnswer fontSize="small" />}
+      />
+      <ListItemButtonCT
+        title="Banner"
+        link="/managements/banner"
+        icon={<ViewCarousel fontSize="small" />}
+      />
+      <ListItemButtonCT
+        title="Content"
+        link="/managements/content"
+        icon={<ContentCopy fontSize="small" />}
       />
       <ListSubheader
         component="div"

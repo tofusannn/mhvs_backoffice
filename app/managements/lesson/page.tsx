@@ -94,10 +94,6 @@ const LessonManagementsPage = () => {
       respons = respons.result.sort((a: ITypeLesson, b: ITypeLesson) => {
         return a.id - b.id;
       });
-    } else {
-      alert("Token Expire");
-      Cookies.set("token", "");
-      router.push("/auth");
     }
 
     setDataList(respons);
@@ -370,6 +366,7 @@ const LessonManagementsPage = () => {
                 </Typography>
                 <TextField
                   select
+                  defaultValue={""}
                   id="language"
                   name="language"
                   sx={{ width: "50%" }}

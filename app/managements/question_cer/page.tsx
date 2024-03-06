@@ -59,10 +59,6 @@ const QuestionnaireManagementsPage = (props: Props) => {
           return a.id - b.id;
         }
       );
-    } else {
-      alert("Token Expire");
-      Cookies.set("token", "");
-      router.push("/auth");
     }
     setDataList(respons);
   }
@@ -71,6 +67,8 @@ const QuestionnaireManagementsPage = (props: Props) => {
     if (params === "delete") {
       setOpenDelete(true);
       setIdDelete(rows.id);
+    } else if (params === "edit") {
+      router.push(`/managements/question_cer/create/?id=${rows.id}`);
     } else {
       router.push(`/managements/question_cer/create`);
     }

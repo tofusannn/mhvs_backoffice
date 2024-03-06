@@ -14,6 +14,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Noto_Sans } from "next/font/google";
 import Cookies from "js-cookie";
+import AuthService from "@/api/AuthService";
 
 type ITypeStyled = {
   theme?: any;
@@ -26,7 +27,7 @@ export default function MainPage({ children }: { children: React.ReactNode }) {
   const [reloadPage, setReloadPage] = useState(true);
   const [open, setOpen] = useState(false);
   const token = Cookies.get("token");
-
+  const token_expire = Cookies.get("token_expire");
   setTimeout(() => setReloadPage(false), 1000);
 
   useEffect(() => {
@@ -35,8 +36,19 @@ export default function MainPage({ children }: { children: React.ReactNode }) {
 
   function checkToken() {
     if (token) {
-      if (pathname === "/auth") {
-        router.push("/managements/users");
+      let expireDate = Date.parse(token_expire || "");
+      let nowDate = Date.now();
+      if (expireDate - 10000000 <= nowDate) {
+        alert("Token Expire");
+        AuthService.logout().then((res: any) => {
+          if (res.msg === "success") {
+            Cookies.set("token", "");
+            Cookies.set("token_expire", "");
+            router.push("/auth");
+          }
+        });
+      } else if (pathname === "/auth") {
+        router.push("/dashboard");
       }
     } else {
       router.push("/auth");

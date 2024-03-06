@@ -18,15 +18,18 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import AuthService from "@/api/AuthService";
 import Cookies from "js-cookie";
+import Toast from "@/components/common/Toast";
 
 type Props = {};
 
 const LoginPage = (props: Props) => {
   const router = useRouter();
   const [showPassword, setShowPassword] = React.useState(false);
+  const [openToast, setOpenToast] = useState(false);
+  const [toastData, setToastData] = useState({ msg: "", status: false });
 
   const validationSchema = yup.object({
     phone: yup.string().required("Phone is required"),
@@ -43,7 +46,11 @@ const LoginPage = (props: Props) => {
         AuthService.login(values).then((res: any) => {
           if (res.msg === "success") {
             Cookies.set("token", res.result.token);
-            router.push("/managements/users");
+            Cookies.set("token_expire", res.result.token_expire);
+            router.push("/dashboard");
+          } else {
+            setOpenToast(true);
+            setToastData({ msg: res.msg, status: false });
           }
         });
       },
@@ -135,6 +142,12 @@ const LoginPage = (props: Props) => {
           </CardContent>
         </Card>
       </From>
+      <Toast
+        open={openToast}
+        setOpen={setOpenToast}
+        msg={toastData.msg}
+        status={toastData.status}
+      />
     </Main>
   );
 };

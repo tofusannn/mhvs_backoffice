@@ -57,10 +57,6 @@ const QuestionManagementsPage = (props: Props) => {
       respons = respons.result.sort((a: ITypeQuestion, b: ITypeQuestion) => {
         return a.id - b.id;
       });
-    } else {
-      alert("Token Expire");
-      Cookies.set("token", "");
-      router.push("/auth");
     }
     setDataList(respons);
   }

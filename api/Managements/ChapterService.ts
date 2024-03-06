@@ -20,19 +20,19 @@ const ChapterService = {
       headers: { token: token },
     });
   },
-  getChapterById(id: number) {
+  getPutChapterByLessonId(id: number) {
     const token = Cookies.get("token");
 
     return api.get({
-      path: `/chapter/${id}`,
+      path: `/put_chapter/${id}`,
       headers: { token: token },
     });
   },
-  putChapterById(id: number, data: ITypeChapter) {
+  putChapter(data: ITypeChapterBody) {
     const token = Cookies.get("token");
 
     return api.put({
-      path: `/chapter/${id}`,
+      path: `/chapter`,
       body: data,
       headers: { token: token },
     });

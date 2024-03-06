@@ -110,10 +110,6 @@ const UserManagementsPage = () => {
       respons = respons.result.sort((a: ITypeUser, b: ITypeUser) => {
         return a.id - b.id;
       });
-    } else {
-      alert("Token Expire");
-      Cookies.set("token", "");
-      router.push("/auth");
     }
 
     setDataList(respons);
@@ -279,8 +275,10 @@ const UserManagementsPage = () => {
                   {row.last_name}
                 </TableCell>
                 <TableCell>
-                  {row.nationality.charAt(0).toUpperCase() +
-                    row.nationality.slice(1)}
+                  {row.nationality === null
+                    ? "-"
+                    : row.nationality.charAt(0).toUpperCase() +
+                      row.nationality.slice(1)}
                 </TableCell>
                 <TableCell>
                   {row.gender.charAt(0).toUpperCase() + row.gender.slice(1)}
@@ -331,6 +329,7 @@ const UserManagementsPage = () => {
                 </Typography>
                 <TextField
                   select
+                  defaultValue={""}
                   id="pre_name"
                   name="pre_name"
                   sx={{ width: "50%" }}
@@ -398,6 +397,7 @@ const UserManagementsPage = () => {
                 </Typography>
                 <TextField
                   select
+                  defaultValue={""}
                   id="nationality"
                   sx={{ width: "50%" }}
                   fullWidth
@@ -425,6 +425,7 @@ const UserManagementsPage = () => {
                 </Typography>
                 <TextField
                   select
+                  defaultValue={""}
                   id="gender"
                   sx={{ width: "50%" }}
                   fullWidth
