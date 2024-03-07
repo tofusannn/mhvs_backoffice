@@ -2,6 +2,14 @@ import api from "./https_request";
 import Cookies from "js-cookie";
 
 const FileService = {
+  uploadFile(data: any) {
+    const token = Cookies.get("token");
+    return api.upload({
+      path: `/file`,
+      body: data,
+      headers: { token: token },
+    });
+  },
   getFileById(fileId: number) {
     const token = Cookies.get("token");
 

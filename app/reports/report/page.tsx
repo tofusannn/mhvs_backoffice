@@ -159,7 +159,6 @@ const ReportPage = (props: Props) => {
                   fullWidth
                   label="Quiz Type"
                   onChange={(e) => setParams(e, "quiz_type", "ans")}
-                  defaultValue={""}
                 >
                   {quizList.map((i, index) => (
                     <MenuItem key={index} value={i.value}>
@@ -174,7 +173,6 @@ const ReportPage = (props: Props) => {
                   fullWidth
                   label="Lesson ID"
                   onChange={(e) => setParams(e, "lesson_id", "ans")}
-                  defaultValue={""}
                 >
                   {lessonList.map((i, index) => (
                     <MenuItem key={index} value={i.id}>

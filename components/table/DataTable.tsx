@@ -90,7 +90,9 @@ export default function DataTable({
       </Grid>
       <Paper sx={{ width: "100%", boxShadow: "none" }}>
         <Stack direction={"row"}>
-          <Box sx={{ padding: 2 }}>
+          <Box
+            sx={{ padding: 2, display: type === "banner" ? "none" : "block" }}
+          >
             <TextField
               name="search_name"
               size="small"
@@ -106,13 +108,12 @@ export default function DataTable({
               select
               fullWidth
               size="small"
-              defaultValue={""}
               placeholder={
                 type === "chapter" ? "Search Lesson" : "Search Language"
               }
               value={
-                type === "approve"
-                  ? "th"
+                type === "approve" || type === "banner"
+                  ? searchValue
                   : type === "chapter"
                   ? searchValue
                   : ""
@@ -133,12 +134,15 @@ export default function DataTable({
                     {i.lesson_name}
                   </MenuItem>
                 ))}
-              {type === "approve" &&
+              {type === "approve" || type === "banner" ? (
                 languageList?.map((i) => (
                   <MenuItem key={i.value} value={i.value}>
                     {i.label}
                   </MenuItem>
-                ))}
+                ))
+              ) : (
+                <div />
+              )}
             </TextField>
           </Box>
         </Stack>

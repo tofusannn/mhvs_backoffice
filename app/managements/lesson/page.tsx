@@ -366,7 +366,6 @@ const LessonManagementsPage = () => {
                 </Typography>
                 <TextField
                   select
-                  defaultValue={""}
                   id="language"
                   name="language"
                   sx={{ width: "50%" }}

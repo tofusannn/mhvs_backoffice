@@ -329,7 +329,6 @@ const UserManagementsPage = () => {
                 </Typography>
                 <TextField
                   select
-                  defaultValue={""}
                   id="pre_name"
                   name="pre_name"
                   sx={{ width: "50%" }}
@@ -397,7 +396,6 @@ const UserManagementsPage = () => {
                 </Typography>
                 <TextField
                   select
-                  defaultValue={""}
                   id="nationality"
                   sx={{ width: "50%" }}
                   fullWidth
@@ -425,7 +423,6 @@ const UserManagementsPage = () => {
                 </Typography>
                 <TextField
                   select
-                  defaultValue={""}
                   id="gender"
                   sx={{ width: "50%" }}
                   fullWidth

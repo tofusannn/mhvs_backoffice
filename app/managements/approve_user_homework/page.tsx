@@ -73,7 +73,7 @@ const ApproveUserHomeworkPage = () => {
     useState<ITypeApprove>(initialValues);
   const [openToast, setOpenToast] = useState(false);
   const [toastData, setToastData] = useState({ msg: "", status: false });
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState("th");
 
   async function getApproveUserHomeworkList(language: string) {
     let respons = await ApproveService.getApproveUserHomework(language).then(
@@ -179,6 +179,7 @@ const ApproveUserHomeworkPage = () => {
         searchFunction={searchName}
         type={"approve"}
         languageList={languageList}
+        searchValue={search}
       >
         <TableBody>
           {visibleRows.map((row: ITypeApprove, index: number) => {

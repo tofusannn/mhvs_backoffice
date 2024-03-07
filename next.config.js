@@ -10,14 +10,9 @@ const nextConfig = {
     ];
   },
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "public.aorsortor.online",
-      },
-    ],
+    domains: ["public.aorsortor.online"],
   },
-  output: 'standalone',
+  output: "standalone",
 };
 
 module.exports = nextConfig;

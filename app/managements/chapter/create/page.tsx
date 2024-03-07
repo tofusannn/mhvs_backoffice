@@ -510,7 +510,6 @@ const CreateChaptersPage = (props: Props) => {
                                           />
                                           <TextField
                                             select
-                                            defaultValue={""}
                                             label="แบบทดสอบ"
                                             sx={{ width: 345 }}
                                             fullWidth
@@ -577,7 +576,6 @@ const CreateChaptersPage = (props: Props) => {
                                           />
                                           <TextField
                                             select
-                                            defaultValue={""}
                                             label="แบบทดสอบ"
                                             sx={{ width: 345 }}
                                             fullWidth

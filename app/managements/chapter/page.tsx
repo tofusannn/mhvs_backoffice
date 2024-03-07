@@ -163,7 +163,7 @@ const ChapterManagementsPage = () => {
         <TableBody>
           {visibleRows.map((row: ITypeChapter, index: number) => {
             return (
-              <TableRow tabIndex={-1} key={row.index}>
+              <TableRow tabIndex={-1} key={index}>
                 <TableCell>{row.index}</TableCell>
                 <TableCell
                   sx={{
