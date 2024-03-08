@@ -57,7 +57,7 @@ const headCells = [
 const initialValues: ITypeBannerBody = {
   img_id: 0,
   active: false,
-  language: "th",
+  language: "",
 };
 
 const languageList = [
@@ -108,7 +108,7 @@ const BannerManagementPage = (props: Props) => {
       setIdEdit(rows.id);
       setImageExam(rows.file_path);
       setFieldValue("img_id", 1, false);
-      const fields = ["active"];
+      const fields = ["active", "language"];
       fields.forEach((field) => setFieldValue(field, rows[field], false));
       setType(params);
       setOpen(true);
