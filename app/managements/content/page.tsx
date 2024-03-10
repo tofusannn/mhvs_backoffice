@@ -536,6 +536,7 @@ const ContentManagementPage = (props: Props) => {
                   fullWidth
                   size="small"
                   value={values.language}
+                  disabled={type === "edit"}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   error={touched.language && Boolean(errors.language)}

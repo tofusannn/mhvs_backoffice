@@ -17,6 +17,14 @@ const QuestionService = {
       headers: { token: token },
     });
   },
+  putQuestion(data: ITypeQuestionBody) {
+    const token = Cookies.get("token");
+    return api.put({
+      path: `/question`,
+      body: data,
+      headers: { token: token },
+    });
+  },
   postQuestion(data: ITypeQuestionBody) {
     const token = Cookies.get("token");
     return api.post({

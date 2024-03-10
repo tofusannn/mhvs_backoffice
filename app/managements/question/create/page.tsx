@@ -37,6 +37,7 @@ import QuestionService from "@/api/Managements/QuestionService";
 type Props = {};
 
 const initialValues: ITypeQuestionBody = {
+  question_detail_id: 0,
   name: "",
   description: "",
   estimate_score_pre: 0,
@@ -123,6 +124,7 @@ const CreateQuestionPage = (props: Props) => {
           });
         });
         let newData = {
+          question_detail_id: id,
           name: res.result.name,
           description: res.result.description,
           estimate_score_pre: res.result.estimate_score_pre || 0,
@@ -168,18 +170,36 @@ const CreateQuestionPage = (props: Props) => {
             initialValues={dataForm}
             validationSchema={validationSchema}
             onSubmit={(values) => {
-              QuestionService.postQuestion(values).then((res: any) => {
-                if (res.msg === "success") {
-                  setOpenToast(true);
-                  setToastData({ msg: res.msg, status: true });
-                  setTimeout(() => {
-                    router.push("/managements/question");
-                  }, 1000);
-                } else {
-                  setOpenToast(true);
-                  setToastData({ msg: res.msg, status: false });
-                }
-              });
+              let id = searchParams.get("id");
+              if (id) {
+                QuestionService.putQuestion(values).then((res: any) => {
+                  if (res.msg === "success") {
+                    setOpenToast(true);
+                    setToastData({ msg: res.msg, status: true });
+                    setTimeout(() => {
+                      router.push("/managements/question");
+                      1;
+                    }, 1000);
+                  } else {
+                    setOpenToast(true);
+                    setToastData({ msg: res.msg, status: false });
+                  }
+                });
+              } else {
+                QuestionService.postQuestion(values).then((res: any) => {
+                  if (res.msg === "success") {
+                    setOpenToast(true);
+                    setToastData({ msg: res.msg, status: true });
+                    setTimeout(() => {
+                      router.push("/managements/question");
+                      1;
+                    }, 1000);
+                  } else {
+                    setOpenToast(true);
+                    setToastData({ msg: res.msg, status: false });
+                  }
+                });
+              }
             }}
             render={({
               values,

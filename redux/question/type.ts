@@ -5,6 +5,7 @@ export type ITypeQuestion = {
 };
 
 export type ITypeQuestionBody = {
+  question_detail_id: number;
   name: string;
   description: string;
   estimate_score_pre: number;
