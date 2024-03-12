@@ -65,12 +65,7 @@ export default function DataTable({
       <Grid container justifyContent={"end"} mb={2}>
         {type === "chapter" ? (
           countData > 0 ? (
-            <Button
-              variant="contained"
-              onClick={() => openDialog("delete", searchValue)}
-            >
-              Delete
-            </Button>
+            <div />
           ) : (
             searchValue != "" && (
               <Button variant="contained" onClick={() => openDialog("create")}>

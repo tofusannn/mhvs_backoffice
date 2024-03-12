@@ -61,6 +61,10 @@ const headCells = [
     id: "language",
     label: "Language",
   },
+  {
+    id: "datetime",
+    label: "Create Date",
+  },
 ];
 
 const initialValues: ITypeContentBody = {
@@ -348,6 +352,9 @@ const ContentManagementPage = (props: Props) => {
                   {row.youtube_link}
                 </TableCell>
                 <TableCell>{getLanguage(row.language)}</TableCell>
+                <TableCell>
+                  {new Date(row.datetime).toLocaleDateString("en-US")}
+                </TableCell>
                 <TableCell>
                   <IconButton onClick={() => openDialog("edit", row)}>
                     <Edit />

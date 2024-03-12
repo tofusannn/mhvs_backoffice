@@ -497,7 +497,7 @@ const CreateQuestionPage = (props: Props) => {
                                                           }}
                                                           row
                                                         >
-                                                          <FormControlLabel
+                                                          {/* <FormControlLabel
                                                             componentsProps={{
                                                               typography: {
                                                                 fontWeight: 600,
@@ -516,15 +516,15 @@ const CreateQuestionPage = (props: Props) => {
                                                               />
                                                             }
                                                             label="is_true"
-                                                          />
-                                                          <Divider
+                                                          /> */}
+                                                          {/* <Divider
                                                             sx={{
                                                               marginLeft:
                                                                 "16px",
                                                             }}
                                                             orientation="vertical"
                                                             flexItem
-                                                          ></Divider>
+                                                          ></Divider> */}
                                                           <FormControlLabel
                                                             componentsProps={{
                                                               typography: {

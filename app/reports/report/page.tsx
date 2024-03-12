@@ -209,10 +209,17 @@ const ReportPage = (props: Props) => {
               </Grid>
               <Grid item xs={2.5}>
                 <TextField
+                  select
                   fullWidth
                   label="Lesson ID"
                   onChange={(e) => setParams(e, "lesson_id", "lesson")}
-                ></TextField>
+                >
+                  {lessonList.map((i, index) => (
+                    <MenuItem key={index} value={i.id}>
+                      {i.lesson_name}
+                    </MenuItem>
+                  ))}
+                </TextField>
               </Grid>
             </Grid>
             <Button
@@ -242,10 +249,17 @@ const ReportPage = (props: Props) => {
               </Grid>
               <Grid item xs={2.5}>
                 <TextField
+                  select
                   fullWidth
                   label="Lesson ID"
                   onChange={(e) => setParams(e, "lesson_id", "qus")}
-                ></TextField>
+                >
+                  {lessonList.map((i, index) => (
+                    <MenuItem key={index} value={i.id}>
+                      {i.lesson_name}
+                    </MenuItem>
+                  ))}
+                </TextField>
               </Grid>
             </Grid>
             <Button

@@ -36,6 +36,10 @@ const headCells = [
     id: "lesson_name",
     label: "Lesson Name",
   },
+  {
+    id: "create_datetime",
+    label: "Create Date",
+  },
 ];
 
 const initialValues: ITypeApprove = {
@@ -188,6 +192,9 @@ const ApproveUserHomeworkPage = () => {
                 <TableCell>{row.user_id}</TableCell>
                 <TableCell>{row.first_name}</TableCell>
                 <TableCell>{row.lesson_name}</TableCell>
+                <TableCell>
+                  {new Date(row.create_datetime).toLocaleDateString("en-US")}
+                </TableCell>
                 <TableCell>
                   <Button
                     sx={{ boxShadow: "none" }}
