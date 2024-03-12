@@ -5,7 +5,7 @@ import LessonService from "@/api/Managements/LessonService";
 import Toast from "@/components/common/Toast";
 import DModal from "@/components/modal/DModal";
 import HeaderText from "@/components/typography/HeaderText";
-import { ITypeLesson } from "@/redux/lesson/types";
+import { ITypeLesson, ITypeLessonBody } from "@/redux/lesson/types";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
@@ -46,19 +46,13 @@ const headCells = [
   },
 ];
 
-const initialValues: ITypeLesson = {
-  id: 0,
+const initialValues: ITypeLessonBody = {
+  lesson_id: 0,
   lesson_name: "",
   lesson_description: "",
   language: "",
-  prominent_point: [
-    {
-      index: 0,
-      name: "",
-      description: "",
-      img_id: 0,
-    },
-  ],
+  questionnaire_cer_id: 0,
+  prominent_point: [],
 };
 
 const languageItems = [
@@ -104,7 +98,8 @@ const LessonManagementsPage = () => {
       setOpenDelete(true);
       setIdDelete(rows.id);
     } else if (params === "edit") {
-      const fields = ["id", "lesson_name", "lesson_description", "language"];
+      const fields = ["lesson_name", "lesson_description", "language"];
+      fields.forEach((field) => setFieldValue("lesson_id", rows["id"], false));
       fields.forEach((field) => setFieldValue(field, rows[field], false));
       setType(params);
       setOpen(true);
@@ -150,19 +145,23 @@ const LessonManagementsPage = () => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       if (type === "edit") {
-        LessonService.putLessonById(values.id, values).then((res: any) => {
-          if (res.msg === "success") {
-            setOpen(false);
-            setOpenToast(true);
-            setToastData({ msg: res.msg, status: true });
-            setTimeout(() => {
-              location.reload();
-            }, 1000);
-          } else {
-            setOpenToast(true);
-            setToastData({ msg: res.msg, status: false });
+        console.log(values);
+
+        LessonService.putLessonById(values.lesson_id, values).then(
+          (res: any) => {
+            if (res.msg === "success") {
+              setOpen(false);
+              setOpenToast(true);
+              setToastData({ msg: res.msg, status: true });
+              setTimeout(() => {
+                location.reload();
+              }, 1000);
+            } else {
+              setOpenToast(true);
+              setToastData({ msg: res.msg, status: false });
+            }
           }
-        });
+        );
       } else {
         LessonService.postLesson(values).then((res: any) => {
           if (res.msg === "success") {
@@ -307,9 +306,9 @@ const LessonManagementsPage = () => {
               <Grid container justifyContent={"space-between"}>
                 <TextField
                   sx={{ display: "none" }}
-                  id="id"
-                  name="id"
-                  value={values.id}
+                  id="lesson_id"
+                  name="lesson_id"
+                  value={values.lesson_id}
                   onChange={handleChange}
                 ></TextField>
                 <Typography>

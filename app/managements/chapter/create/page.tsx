@@ -117,7 +117,7 @@ const CreateChaptersPage = (props: Props) => {
   setTimeout(() => setReloadPage(false), 1000);
 
   useEffect(() => {
-    if (searchParams.get("id")) {
+    if (searchParams.get("id") && searchParams.get("type") === "edit") {
       getChapterDetails();
     }
     getQuestionList();
@@ -184,7 +184,11 @@ const CreateChaptersPage = (props: Props) => {
   return (
     <div>
       <HeaderText
-        title={searchParams.get("id") ? "Edit Chapter" : "Create Chapter"}
+        title={
+          searchParams.get("type") === "edit"
+            ? "Edit Chapter"
+            : "Create Chapter"
+        }
       />
       {reloadPage ? (
         <Main>
@@ -197,7 +201,8 @@ const CreateChaptersPage = (props: Props) => {
             validationSchema={validationSchema}
             onSubmit={(values) => {
               let id = searchParams.get("id");
-              if (id) {
+              let type = searchParams.get("type");
+              if (id && type === "edit") {
                 ChapterService.putChapter(values).then((res: any) => {
                   if (res.msg === "success") {
                     setOpenToast(true);

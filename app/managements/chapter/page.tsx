@@ -123,7 +123,11 @@ const ChapterManagementsPage = () => {
       setOpenDelete(true);
       setIdDelete(rows.index);
     } else {
-      router.push(`/managements/chapter/create/?id=${search}`);
+      router.push(
+        `/managements/chapter/create/?id=${search}&type=${
+          params === "edit" ? "edit" : "create"
+        }`
+      );
     }
   }
 

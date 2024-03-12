@@ -25,6 +25,14 @@ const QuestionCerService = {
       headers: { token: token },
     });
   },
+  putQuestionCer(data: ITypeQuestionCerBody) {
+    const token = Cookies.get("token");
+    return api.put({
+      path: `/questionnaire_cer`,
+      body: data,
+      headers: { token: token },
+    });
+  },
   deleteQuestionCer(id: number) {
     const token = Cookies.get("token");
     return api.delete({

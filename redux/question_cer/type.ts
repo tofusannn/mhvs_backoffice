@@ -5,6 +5,7 @@ export type ITypeQuestionCer = {
 };
 
 export type ITypeQuestionCerBody = {
+  questionnaire_cer_id: number;
   name: string;
   description: string;
   question: {
