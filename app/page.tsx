@@ -38,15 +38,11 @@ export default function MainPage({ children }: { children: React.ReactNode }) {
     if (token) {
       let expireDate = Date.parse(token_expire || "");
       let nowDate = Date.now();
-      if (expireDate - 10000000 <= nowDate) {
+      if (expireDate - 100000000 <= nowDate) {
         alert("Token Expire");
-        AuthService.logout().then((res: any) => {
-          if (res.msg === "success") {
-            Cookies.set("token", "");
-            Cookies.set("token_expire", "");
-            router.push("/auth");
-          }
-        });
+        Cookies.set("token", "");
+        Cookies.set("token_expire", "");
+        router.push("/auth");
       } else if (pathname === "/auth") {
         router.push("/dashboard");
       }
