@@ -183,21 +183,19 @@ const ContentManagementPage = (props: Props) => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       if (type === "edit") {
-        console.log(values);
-
-        // ContentService.putContent(idEdit, values).then((res: any) => {
-        //   if (res.msg === "success") {
-        //     setOpen(false);
-        //     setOpenToast(true);
-        //     setToastData({ msg: res.msg, status: true });
-        //     setTimeout(() => {
-        //       location.reload();
-        //     }, 1000);
-        //   } else {
-        //     setOpenToast(true);
-        //     setToastData({ msg: res.msg, status: false });
-        //   }
-        // });
+        ContentService.putContent(idEdit, values).then((res: any) => {
+          if (res.msg === "success") {
+            setOpen(false);
+            setOpenToast(true);
+            setToastData({ msg: res.msg, status: true });
+            setTimeout(() => {
+              location.reload();
+            }, 1000);
+          } else {
+            setOpenToast(true);
+            setToastData({ msg: res.msg, status: false });
+          }
+        });
       } else {
         ContentService.postContent(values).then((res: any) => {
           if (res.msg === "success") {
