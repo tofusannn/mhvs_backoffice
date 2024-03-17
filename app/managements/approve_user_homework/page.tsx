@@ -184,6 +184,7 @@ const ApproveUserHomeworkPage = () => {
         type={"approve"}
         languageList={languageList}
         searchValue={search}
+        type2={"approve"}
       >
         <TableBody>
           {visibleRows.map((row: ITypeApprove, index: number) => {

@@ -245,11 +245,11 @@ const UserManagementsPage = () => {
 
   function searchName(e: any) {
     const name = e.target.value;
-    const newData = dataList.filter((i: ITypeUser) =>
+    const dataSearch = dataList.filter((i: ITypeUser) =>
       i.first_name.startsWith(name)
     );
     setSearch(name);
-    setDataSearchList(newData);
+    setDataSearchList(dataSearch);
   }
 
   return (
@@ -264,6 +264,7 @@ const UserManagementsPage = () => {
         setRowsPerPage={setRowsPerPage}
         openDialog={openDialog}
         searchFunction={searchName}
+        type2={"user"}
       >
         <TableBody>
           {visibleRows.map((row: ITypeUser, index: number) => {

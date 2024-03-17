@@ -19,6 +19,8 @@ import {
 } from "@mui/material";
 import CUModal from "../modal/CUModal";
 import { ITypeLesson } from "@/redux/lesson/types";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 type Props = {
   children: React.ReactNode;
@@ -31,6 +33,7 @@ type Props = {
   openDialog: (type: string, rows?: string) => void;
   searchFunction: (e: any) => void;
   type?: string;
+  type2?: string;
   lessonList?: ITypeLesson[];
   languageList?: { label: string; value: string }[];
   searchValue?: string;
@@ -47,6 +50,7 @@ export default function DataTable({
   openDialog,
   searchFunction,
   type,
+  type2,
   lessonList,
   languageList,
   searchValue,
@@ -86,7 +90,11 @@ export default function DataTable({
       <Paper sx={{ width: "100%", boxShadow: "none" }}>
         <Stack direction={"row"}>
           <Box
-            sx={{ padding: 2, display: type === "banner" ? "none" : "block" }}
+            sx={{
+              padding: "16px 0px 16px 16px",
+              gap: 2,
+              display: type === "banner" ? "none" : "flex",
+            }}
           >
             <TextField
               name="search_name"
@@ -94,6 +102,31 @@ export default function DataTable({
               placeholder="Search Firstname"
               onChange={searchFunction}
             />
+            <TextField
+              sx={{ display: type2 === "user" ? "block" : "none" }}
+              name="search_phone"
+              size="small"
+              placeholder="Search Phone"
+              onChange={searchFunction}
+            />
+            {/* <Box>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  name="search_date"
+                  slotProps={{ textField: { size: "small" } }}
+                  sx={{
+                    width: "100%",
+                    display:
+                      type2 === "user" || type2 === "approve"
+                        ? "block"
+                        : "none",
+                  }}
+                  format="DD/MM/YYYY"
+                  label="Search Date"
+                  onChange={searchFunction}
+                />
+              </LocalizationProvider>
+            </Box> */}
           </Box>
           <Box
             sx={{ width: "20%", padding: 2, display: type ? "block" : "none" }}
