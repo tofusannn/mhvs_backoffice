@@ -115,14 +115,19 @@ const ContentManagementPage = (props: Props) => {
     setDataSearchList(respons);
   }
 
-  function openDialog(params: string, rows?: any) {
+  async function openDialog(params: string, rows?: any) {
     if (params === "delete") {
       setOpenDelete(true);
       setIdDelete(rows.id);
     } else if (params === "edit") {
+      let respons = await ContentService.getContentById(rows.id).then(
+        (res: any) => res
+      );
+      if (respons.status) {
+        setFieldValue("img_id", respons.result.img_id, false);
+      }
       setIdEdit(rows.id);
       setImageExam(rows.file_path);
-      setFieldValue("img_id", 1, false);
       const fields = [
         "content_name",
         "content_detail",
@@ -178,19 +183,21 @@ const ContentManagementPage = (props: Props) => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       if (type === "edit") {
-        ContentService.putContent(idEdit, values).then((res: any) => {
-          if (res.msg === "success") {
-            setOpen(false);
-            setOpenToast(true);
-            setToastData({ msg: res.msg, status: true });
-            setTimeout(() => {
-              location.reload();
-            }, 1000);
-          } else {
-            setOpenToast(true);
-            setToastData({ msg: res.msg, status: false });
-          }
-        });
+        console.log(values);
+
+        // ContentService.putContent(idEdit, values).then((res: any) => {
+        //   if (res.msg === "success") {
+        //     setOpen(false);
+        //     setOpenToast(true);
+        //     setToastData({ msg: res.msg, status: true });
+        //     setTimeout(() => {
+        //       location.reload();
+        //     }, 1000);
+        //   } else {
+        //     setOpenToast(true);
+        //     setToastData({ msg: res.msg, status: false });
+        //   }
+        // });
       } else {
         ContentService.postContent(values).then((res: any) => {
           if (res.msg === "success") {
