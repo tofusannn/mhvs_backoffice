@@ -51,7 +51,7 @@ const headCells = [
   },
   {
     id: "content_detail",
-    label: "Details",
+    label: "Detail",
   },
   {
     id: "youtube_link",

@@ -99,7 +99,7 @@ export default function DataTable({
             <TextField
               name="search_name"
               size="small"
-              placeholder="Search Firstname"
+              placeholder="Search Name"
               onChange={searchFunction}
             />
             <TextField
@@ -163,8 +163,8 @@ export default function DataTable({
                 type === "approve" || type === "banner"
                   ? searchValue
                   : type === "chapter"
-                  ? searchValue
-                  : ""
+                    ? searchValue
+                    : ""
               }
               onChange={searchFunction}
               helperText={

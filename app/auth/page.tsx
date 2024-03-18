@@ -38,7 +38,7 @@ const LoginPage = (props: Props) => {
   const { values, touched, errors, handleBlur, handleSubmit, handleChange } =
     useFormik({
       initialValues: {
-        phone: "0932398390",
+        phone: "",
         password: "",
       },
       validationSchema: validationSchema,

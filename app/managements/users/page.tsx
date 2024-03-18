@@ -36,7 +36,7 @@ const headCells = [
   },
   {
     id: "pre_name",
-    label: "Fullname",
+    label: "Name",
   },
   {
     id: "nationality",
@@ -293,7 +293,7 @@ const UserManagementsPage = () => {
                   {row.nationality === null
                     ? "-"
                     : row.nationality.charAt(0).toUpperCase() +
-                      row.nationality.slice(1)}
+                    row.nationality.slice(1)}
                 </TableCell>
                 <TableCell>
                   {row.gender.charAt(0).toUpperCase() + row.gender.slice(1)}

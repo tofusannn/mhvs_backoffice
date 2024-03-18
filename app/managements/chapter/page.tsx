@@ -30,7 +30,7 @@ const headCells = [
   },
   {
     id: "lesson_id",
-    label: "Lesson Id",
+    label: "Lesson ID",
   },
 ];
 
@@ -124,8 +124,7 @@ const ChapterManagementsPage = () => {
       setIdDelete(rows.index);
     } else {
       router.push(
-        `/managements/chapter/create/?id=${search}&type=${
-          params === "edit" ? "edit" : "create"
+        `/managements/chapter/create/?id=${search}&type=${params === "edit" ? "edit" : "create"
         }`
       );
     }

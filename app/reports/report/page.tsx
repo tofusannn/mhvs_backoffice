@@ -171,7 +171,7 @@ const ReportPage = (props: Props) => {
                 <TextField
                   select
                   fullWidth
-                  label="Lesson ID"
+                  label="Lesson"
                   onChange={(e) => setParams(e, "lesson_id", "ans")}
                 >
                   {lessonList.map((i, index) => (
@@ -211,7 +211,7 @@ const ReportPage = (props: Props) => {
                 <TextField
                   select
                   fullWidth
-                  label="Lesson ID"
+                  label="Lesson"
                   onChange={(e) => setParams(e, "lesson_id", "lesson")}
                 >
                   {lessonList.map((i, index) => (
@@ -251,7 +251,7 @@ const ReportPage = (props: Props) => {
                 <TextField
                   select
                   fullWidth
-                  label="Lesson ID"
+                  label="Lesson"
                   onChange={(e) => setParams(e, "lesson_id", "qus")}
                 >
                   {lessonList.map((i, index) => (

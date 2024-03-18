@@ -31,7 +31,7 @@ const headCells = [
   },
   {
     id: "first_name",
-    label: "Firstname",
+    label: "Name",
   },
   {
     id: "lesson_name",
