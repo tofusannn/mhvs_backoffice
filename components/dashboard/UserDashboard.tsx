@@ -14,7 +14,7 @@ const UserDashboard = () => {
   }, []);
 
   async function getDashboardData() {
-    const data = await UserService.getUserList().then((res: any) => {
+    const data = await UserService.getUserList(undefined).then((res: any) => {
       return res.result;
     });
     const thaiData = data.filter((i: any) => i.nationality === "thai");
