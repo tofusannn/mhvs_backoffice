@@ -16,4 +16,5 @@ export type ITypeLessonBody = {
   language: string;
   questionnaire_cer_id: number;
   prominent_point: ITypeProminentPoint;
+  active: boolean;
 };

@@ -11,12 +11,14 @@ import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import DataTable from "@/components/table/DataTable";
 import {
+  Box,
   Button,
   DialogActions,
   DialogContent,
   Grid,
   IconButton,
   MenuItem,
+  Switch,
   TableBody,
   TableCell,
   TableRow,
@@ -53,6 +55,7 @@ const initialValues: ITypeLessonBody = {
   language: "",
   questionnaire_cer_id: 0,
   prominent_point: [],
+  active: false,
 };
 
 const languageItems = [
@@ -98,7 +101,12 @@ const LessonManagementsPage = () => {
       setOpenDelete(true);
       setIdDelete(rows.id);
     } else if (params === "edit") {
-      const fields = ["lesson_name", "lesson_description", "language"];
+      const fields = [
+        "lesson_name",
+        "lesson_description",
+        "language",
+        "active",
+      ];
       fields.forEach((field) => setFieldValue("lesson_id", rows["id"], false));
       fields.forEach((field) => setFieldValue(field, rows[field], false));
       setType(params);
@@ -388,6 +396,25 @@ const LessonManagementsPage = () => {
                     )
                   )}
                 </TextField>
+              </Grid>
+              <Grid container justifyContent={"space-between"}>
+                <Typography>
+                  สถานะ<span style={{ color: "red" }}>*</span>
+                </Typography>
+                <Box display={"flex"} alignItems={"center"}>
+                  <Typography fontWeight={values.active ? "500" : "800"}>
+                    InActive
+                  </Typography>
+                  <Switch
+                    id="active"
+                    checked={values.active}
+                    value={values.active}
+                    onChange={handleChange}
+                  ></Switch>
+                  <Typography fontWeight={values.active ? "800" : "500"}>
+                    Active
+                  </Typography>
+                </Box>
               </Grid>
             </Grid>
           </DialogContent>
