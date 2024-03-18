@@ -18,10 +18,11 @@ import React, { useEffect, useState } from "react";
 import Toast from "@/components/common/Toast";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import { ITypeApprove } from "@/redux/approve/types";
+import { ITypeApprove, ITypeApproveParams } from "@/redux/approve/types";
 import ApproveService from "@/api/Managements/ApproveService";
 import ApproveModal from "@/components/modal/ApproveModal";
 import Image from "next/image";
+import dayjs from "dayjs";
 
 const headCells = [
   {
@@ -37,8 +38,12 @@ const headCells = [
     label: "Lesson Name",
   },
   {
+    id: "register_datetime",
+    label: "Register Date",
+  },
+  {
     id: "create_datetime",
-    label: "Create Date",
+    label: "Question Date",
   },
 ];
 
@@ -50,6 +55,7 @@ const initialValues: ITypeApprove = {
   chapter_homework_id: 0,
   chapter_user_homework_id: 0,
   create_datetime: "",
+  register_datetime: "",
   user_lesson_id: 0,
   description: "",
   link_photo1: "",
@@ -78,11 +84,19 @@ const ApproveUserHomeworkPage = () => {
   const [openToast, setOpenToast] = useState(false);
   const [toastData, setToastData] = useState({ msg: "", status: false });
   const [search, setSearch] = useState("th");
-
-  async function getApproveUserHomeworkList(language: string) {
-    let respons = await ApproveService.getApproveUserHomework(language).then(
-      (res: any) => res
-    );
+  const [searchParams, setSearchParams] = useState<ITypeApproveParams>({
+    name: "",
+    start_date: "",
+    end_date: "",
+  });
+  async function getApproveUserHomeworkList(
+    language: string,
+    params?: ITypeApproveParams
+  ) {
+    let respons = await ApproveService.getApproveUserHomework(
+      language,
+      params
+    ).then((res: any) => res);
     if (respons.status) {
       respons = respons.result.sort((a: ITypeApprove, b: ITypeApprove) => {
         return a.user_id - b.user_id;
@@ -128,52 +142,52 @@ const ApproveUserHomeworkPage = () => {
   }
 
   useEffect(() => {
-    if (search != "") {
-      const dataSlice = dataSearchList.slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      );
-      setVisibleRows(dataSlice);
-      setEmptyRows(
-        page > 0
-          ? Math.max(0, (1 + page) * rowsPerPage - dataSearchList.length)
-          : 0
-      );
-    } else {
-      const dataSlice = dataList.slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      );
-      setVisibleRows(dataSlice);
-      setEmptyRows(
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dataList.length) : 0
-      );
-    }
-  }, [dataList, dataSearchList, page, rowsPerPage, search]);
+    const dataSlice = dataList.slice(
+      page * rowsPerPage,
+      page * rowsPerPage + rowsPerPage
+    );
+    setVisibleRows(dataSlice);
+    setEmptyRows(
+      page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dataList.length) : 0
+    );
+  }, [dataList, dataSearchList, page, rowsPerPage]);
 
   useEffect(() => {
-    searchName({ target: { name: "", value: "th" } });
+    searchName({ target: { name: "language", value: "th" } });
   }, []);
 
-  function searchName(e: any) {
-    const name = e.target.name;
-    const value = e.target.value;
-    if (name === "search_name") {
-      const newData = dataList.filter((i: ITypeApprove) =>
-        i.first_name.startsWith(value)
-      );
-      setDataSearchList(newData);
+  function searchName(e: any, nameDate?: string) {
+    let name;
+    let value;
+    let obj = searchParams;
+    let lg = search;
+    if (e && e.target) {
+      name = e.target.name;
+      value = e.target.value;
+      if (name === "search_name") {
+        obj.name = value;
+      } else {
+        setSearch(e.target.value);
+        lg = e.target.value;
+      }
     } else {
-      getApproveUserHomeworkList(value);
+      name = nameDate;
+      value = e ? dayjs(e).format("YYYY-MM-DD") : "";
+      if (name === "start_date") {
+        obj.start_date = value;
+      } else {
+        obj.end_date = value;
+      }
     }
-    setSearch(value);
+    setSearchParams(obj);
+    getApproveUserHomeworkList(lg, searchParams);
   }
 
   return (
     <div>
       <HeaderText title="Approve User Homework" />
       <DataTable
-        countData={search != "" ? dataSearchList.length : dataList.length}
+        countData={dataList.length}
         headCells={headCells}
         page={page}
         setPage={setPage}
@@ -194,7 +208,10 @@ const ApproveUserHomeworkPage = () => {
                 <TableCell>{row.first_name}</TableCell>
                 <TableCell>{row.lesson_name}</TableCell>
                 <TableCell>
-                  {new Date(row.create_datetime).toLocaleDateString("en-US")}
+                  {dayjs(row.register_datetime).format("DD/MM/YYYY")}
+                </TableCell>
+                <TableCell>
+                  {dayjs(row.create_datetime).format("DD/MM/YYYY")}
                 </TableCell>
                 <TableCell>
                   <Button

@@ -1,14 +1,25 @@
+import { ITypeApproveParams } from "@/redux/approve/types";
 import api from "../https_request";
 import Cookies from "js-cookie";
 
 const ApproveService = {
-  getApproveUserHomework(language: string) {
+  getApproveUserHomework(
+    language: string,
+    params: ITypeApproveParams | undefined
+  ) {
     const token = Cookies.get("token");
 
-    return api.get({
-      path: `/approve_user_homework/${language}`,
-      headers: { token: token },
-    });
+    if (params) {
+      return api.get({
+        path: `/approve_user_homework/${language}?name=${params.name}&start_date=${params.start_date}&end_date=${params.end_date}`,
+        headers: { token: token },
+      });
+    } else {
+      return api.get({
+        path: `/approve_user_homework/${language}`,
+        headers: { token: token },
+      });
+    }
   },
   approveCertificate(data: { user_lesson_id: number }) {
     const token = Cookies.get("token");

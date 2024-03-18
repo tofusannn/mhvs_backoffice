@@ -5,7 +5,7 @@ import UserService from "@/api/Managements/UserService";
 import CUModal from "@/components/modal/CUModal";
 import DataTable from "@/components/table/DataTable";
 import HeaderText from "@/components/typography/HeaderText";
-import { ITypeUser } from "@/redux/user/types";
+import { ITypeUser, ITypeUserParams } from "@/redux/user/types";
 import { Delete, Edit, ErrorOutline } from "@mui/icons-material";
 import {
   Button,
@@ -27,6 +27,7 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import Toast from "@/components/common/Toast";
 import DModal from "@/components/modal/DModal";
+import dayjs from "dayjs";
 
 const headCells = [
   {
@@ -49,6 +50,10 @@ const headCells = [
     id: "phone",
     label: "Phone Number",
   },
+  {
+    id: "create_datetime",
+    label: "Register Date",
+  },
 ];
 
 const initialValues: ITypeUser = {
@@ -65,6 +70,7 @@ const initialValues: ITypeUser = {
   idcard: "",
   date_of_birth: "2023-12-01",
   img_id: 0,
+  create_datetime: "",
 };
 
 const nationalityList = [
@@ -98,14 +104,19 @@ const UserManagementsPage = () => {
   const [type, setType] = useState("");
   const [openToast, setOpenToast] = useState(false);
   const [toastData, setToastData] = useState({ msg: "", status: false });
-  const [search, setSearch] = useState("");
+  const [searchParams, setSearchParams] = useState<ITypeUserParams>({
+    name: "",
+    phone: "",
+    start_date: "",
+    end_date: "",
+  });
 
   useEffect(() => {
     getAllUserList();
   }, []);
 
-  async function getAllUserList() {
-    let respons = await UserService.getUserList().then((res: any) => res);
+  async function getAllUserList(params?: ITypeUserParams) {
+    let respons = await UserService.getUserList(params).then((res: any) => res);
     if (respons.status) {
       respons = respons.result.sort((a: ITypeUser, b: ITypeUser) => {
         return a.id - b.id;
@@ -220,43 +231,46 @@ const UserManagementsPage = () => {
   });
 
   useEffect(() => {
-    if (search != "") {
-      const dataSlice = dataSearchList.slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      );
-      setVisibleRows(dataSlice);
-      setEmptyRows(
-        page > 0
-          ? Math.max(0, (1 + page) * rowsPerPage - dataSearchList.length)
-          : 0
-      );
-    } else {
-      const dataSlice = dataList.slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      );
-      setVisibleRows(dataSlice);
-      setEmptyRows(
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dataList.length) : 0
-      );
-    }
-  }, [dataList, dataSearchList, page, rowsPerPage, search]);
-
-  function searchName(e: any) {
-    const name = e.target.value;
-    const dataSearch = dataList.filter((i: ITypeUser) =>
-      i.first_name.startsWith(name)
+    const dataSlice = dataList.slice(
+      page * rowsPerPage,
+      page * rowsPerPage + rowsPerPage
     );
-    setSearch(name);
-    setDataSearchList(dataSearch);
+    setVisibleRows(dataSlice);
+    setEmptyRows(
+      page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dataList.length) : 0
+    );
+  }, [dataList, dataSearchList, page, rowsPerPage]);
+
+  function searchName(e: any, nameDate?: string) {
+    let name;
+    let value;
+    let obj = searchParams;
+    if (e && e.target) {
+      name = e.target.name;
+      value = e.target.value;
+      if (name === "search_phone") {
+        obj.phone = value;
+      } else {
+        obj.name = value;
+      }
+    } else {
+      name = nameDate;
+      value = e ? dayjs(e).format("YYYY-MM-DD") : "";
+      if (name === "start_date") {
+        obj.start_date = value;
+      } else {
+        obj.end_date = value;
+      }
+    }
+    setSearchParams(obj);
+    getAllUserList(searchParams);
   }
 
   return (
     <div>
       <HeaderText title="User Managements" />
       <DataTable
-        countData={search != "" ? dataSearchList.length : dataList.length}
+        countData={dataList.length}
         headCells={headCells}
         page={page}
         setPage={setPage}
@@ -285,6 +299,9 @@ const UserManagementsPage = () => {
                   {row.gender.charAt(0).toUpperCase() + row.gender.slice(1)}
                 </TableCell>
                 <TableCell>{row.phone}</TableCell>
+                <TableCell>
+                  {dayjs(row.create_datetime).format("DD/MM/YYYY")}
+                </TableCell>
                 <TableCell>
                   <IconButton onClick={() => openDialog("edit", row)}>
                     <Edit />

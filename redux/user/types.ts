@@ -12,4 +12,12 @@ export type ITypeUser = {
   idcard: string;
   date_of_birth: string;
   img_id: number;
+  create_datetime: string;
+};
+
+export type ITypeUserParams = {
+  name: string;
+  phone: string;
+  start_date: string;
+  end_date: string;
 };

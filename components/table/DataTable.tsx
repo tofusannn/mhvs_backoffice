@@ -31,7 +31,7 @@ type Props = {
   rowsPerPage: number;
   setRowsPerPage: (rowsPerPage: number) => void;
   openDialog: (type: string, rows?: string) => void;
-  searchFunction: (e: any) => void;
+  searchFunction: (e: any, name?: string) => void;
   type?: string;
   type2?: string;
   lessonList?: ITypeLesson[];
@@ -109,11 +109,14 @@ export default function DataTable({
               placeholder="Search Phone"
               onChange={searchFunction}
             />
-            {/* <Box>
+            <Box display={"flex"} gap={2}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
-                  name="search_date"
-                  slotProps={{ textField: { size: "small" } }}
+                  name="search_start_date"
+                  slotProps={{
+                    textField: { size: "small" },
+                    field: { clearable: true },
+                  }}
                   sx={{
                     width: "100%",
                     display:
@@ -122,11 +125,28 @@ export default function DataTable({
                         : "none",
                   }}
                   format="DD/MM/YYYY"
-                  label="Search Date"
-                  onChange={searchFunction}
+                  label="Start Date"
+                  onChange={(e) => searchFunction(e, "start_date")}
+                />
+                <DatePicker
+                  name="search_end_date"
+                  slotProps={{
+                    textField: { size: "small" },
+                    field: { clearable: true },
+                  }}
+                  sx={{
+                    width: "100%",
+                    display:
+                      type2 === "user" || type2 === "approve"
+                        ? "block"
+                        : "none",
+                  }}
+                  format="DD/MM/YYYY"
+                  label="End Date"
+                  onChange={(e) => searchFunction(e, "end_date")}
                 />
               </LocalizationProvider>
-            </Box> */}
+            </Box>
           </Box>
           <Box
             sx={{ width: "20%", padding: 2, display: type ? "block" : "none" }}
