@@ -46,6 +46,10 @@ const headCells = [
     id: "language",
     label: "Language",
   },
+  {
+    id: "active",
+    label: "Status",
+  },
 ];
 
 const initialValues: ITypeLessonBody = {
@@ -279,6 +283,7 @@ const LessonManagementsPage = () => {
                   {row.lesson_description}
                 </TableCell>
                 <TableCell>{getLanguage(row.language)}</TableCell>
+                <TableCell>{row.active ? "Active" : "InActive"}</TableCell>
                 <TableCell>
                   <IconButton onClick={() => openDialog("edit", row)}>
                     <Edit />

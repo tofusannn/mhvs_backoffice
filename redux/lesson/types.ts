@@ -5,6 +5,7 @@ export type ITypeLesson = {
   language: string;
   questionnaire_cer_id: number;
   prominent_point: ITypeProminentPoint;
+  active: boolean;
 };
 
 export type ITypeProminentPoint = [];
