@@ -89,6 +89,7 @@ const NavBar = (props: Props) => {
       <ListItemButtonCT
         title="Lesson"
         link="/managements/lesson"
+        actions="create"
         icon={<Book fontSize="small" />}
       />
       <ListItemButtonCT

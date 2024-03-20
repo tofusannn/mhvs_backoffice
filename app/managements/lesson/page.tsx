@@ -1,6 +1,5 @@
 "use client";
 
-import * as yup from "yup";
 import LessonService from "@/api/Managements/LessonService";
 import Toast from "@/components/common/Toast";
 import DModal from "@/components/modal/DModal";
@@ -8,32 +7,18 @@ import HeaderText from "@/components/typography/HeaderText";
 import { ITypeLesson, ITypeLessonBody } from "@/redux/lesson/types";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import Cookies from "js-cookie";
 import DataTable from "@/components/table/DataTable";
-import {
-  Box,
-  Button,
-  DialogActions,
-  DialogContent,
-  Grid,
-  IconButton,
-  MenuItem,
-  Switch,
-  TableBody,
-  TableCell,
-  TableRow,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { IconButton, TableBody, TableCell, TableRow } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
-import { useFormik } from "formik";
-import CUModal from "@/components/modal/CUModal";
+import Image from "next/image";
+import FileService from "@/api/FileService";
 
 const headCells = [
   {
     id: "id",
     label: "ID",
   },
+  { id: "img_id", label: "Banner" },
   {
     id: "lesson_name",
     label: "Name",
@@ -52,23 +37,6 @@ const headCells = [
   },
 ];
 
-const initialValues: ITypeLessonBody = {
-  lesson_id: 0,
-  lesson_name: "",
-  lesson_description: "",
-  language: "",
-  questionnaire_cer_id: 0,
-  prominent_point: [],
-  active: false,
-};
-
-const languageItems = [
-  { value: "th", label: "Thai" },
-  { value: "mm", label: "Myanmar" },
-  { value: "cd", label: "Cambodia" },
-  { value: "ls", label: "Laos" },
-];
-
 const LessonManagementsPage = () => {
   const router = useRouter();
   const [dataList, setDataList] = useState([]);
@@ -77,10 +45,8 @@ const LessonManagementsPage = () => {
   const [emptyRows, setEmptyRows] = useState(0);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [open, setOpen] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [idDelete, setIdDelete] = useState(0);
-  const [type, setType] = useState("");
   const [openToast, setOpenToast] = useState(false);
   const [toastData, setToastData] = useState({ msg: "", status: false });
   const [search, setSearch] = useState("");
@@ -90,14 +56,14 @@ const LessonManagementsPage = () => {
   }, []);
 
   async function getAllLessonList() {
-    let respons = await LessonService.getLessonList().then((res: any) => res);
-    if (respons.status) {
-      respons = respons.result.sort((a: ITypeLesson, b: ITypeLesson) => {
+    let response = await LessonService.getLessonList().then((res: any) => res);
+    if (response.msg === "success") {
+      response = response.result.sort((a: ITypeLesson, b: ITypeLesson) => {
         return a.id - b.id;
       });
     }
 
-    setDataList(respons);
+    setDataList(response);
   }
 
   function openDialog(params: string, rows?: any) {
@@ -105,19 +71,9 @@ const LessonManagementsPage = () => {
       setOpenDelete(true);
       setIdDelete(rows.id);
     } else if (params === "edit") {
-      const fields = [
-        "lesson_name",
-        "lesson_description",
-        "language",
-        "active",
-      ];
-      fields.forEach((field) => setFieldValue("lesson_id", rows["id"], false));
-      fields.forEach((field) => setFieldValue(field, rows[field], false));
-      setType(params);
-      setOpen(true);
+      router.push(`/managements/lesson/create/?id=${rows.id}`);
     } else {
-      setType(params);
-      setOpen(true);
+      router.push(`/managements/lesson/create`);
     }
   }
 
@@ -136,61 +92,6 @@ const LessonManagementsPage = () => {
       }
     });
   }
-
-  const validationSchema = yup.object({
-    lesson_name: yup.string().required("โปรดระบุ"),
-    lesson_description: yup.string().required("โปรดระบุ"),
-    language: yup.string().required("โปรดระบุ"),
-  });
-
-  const {
-    values,
-    touched,
-    errors,
-    handleBlur,
-    handleSubmit,
-    handleChange,
-    setFieldValue,
-    resetForm,
-  } = useFormik({
-    initialValues: initialValues,
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
-      if (type === "edit") {
-        console.log(values);
-
-        LessonService.putLessonById(values.lesson_id, values).then(
-          (res: any) => {
-            if (res.msg === "success") {
-              setOpen(false);
-              setOpenToast(true);
-              setToastData({ msg: res.msg, status: true });
-              setTimeout(() => {
-                location.reload();
-              }, 1000);
-            } else {
-              setOpenToast(true);
-              setToastData({ msg: res.msg, status: false });
-            }
-          }
-        );
-      } else {
-        LessonService.postLesson(values).then((res: any) => {
-          if (res.msg === "success") {
-            setOpen(false);
-            setOpenToast(true);
-            setToastData({ msg: res.msg, status: true });
-            setTimeout(() => {
-              location.reload();
-            }, 1000);
-          } else {
-            setOpenToast(true);
-            setToastData({ msg: res.msg, status: false });
-          }
-        });
-      }
-    },
-  });
 
   useEffect(() => {
     if (search != "") {
@@ -262,6 +163,19 @@ const LessonManagementsPage = () => {
             return (
               <TableRow tabIndex={-1} key={row.id}>
                 <TableCell>{row.id}</TableCell>
+                <TableCell sx={{ position: "relative" }}>
+                  {row.file_path ? (
+                    <Image
+                      src={`https://public.aorsortor.online${row.file_path}`}
+                      alt={"banner"}
+                      fill
+                      style={{ objectFit: "contain" }}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                  ) : (
+                    <div />
+                  )}
+                </TableCell>
                 <TableCell
                   sx={{
                     maxWidth: 200,
@@ -306,130 +220,6 @@ const LessonManagementsPage = () => {
           )}
         </TableBody>
       </DataTable>
-      <CUModal
-        open={open}
-        setOpen={setOpen}
-        type={type}
-        title={"Lesson"}
-        resetForm={resetForm}
-      >
-        <form onSubmit={handleSubmit}>
-          <DialogContent>
-            <Grid container gap={2}>
-              <Grid container justifyContent={"space-between"}>
-                <TextField
-                  sx={{ display: "none" }}
-                  id="lesson_id"
-                  name="lesson_id"
-                  value={values.lesson_id}
-                  onChange={handleChange}
-                ></TextField>
-                <Typography>
-                  ชื่อบทเรียน<span style={{ color: "red" }}>*</span>
-                </Typography>
-                <TextField
-                  id="lesson_name"
-                  name="lesson_name"
-                  sx={{ width: "50%" }}
-                  multiline
-                  rows={2}
-                  fullWidth
-                  size="small"
-                  value={values.lesson_name}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.lesson_name && Boolean(errors.lesson_name)}
-                  helperText={
-                    touched.lesson_name &&
-                    Boolean(errors.lesson_name) &&
-                    errors.lesson_name
-                  }
-                ></TextField>
-              </Grid>
-              <Grid container justifyContent={"space-between"}>
-                <Typography>
-                  รายละเอียด<span style={{ color: "red" }}>*</span>
-                </Typography>
-                <TextField
-                  id="lesson_description"
-                  name="lesson_description"
-                  sx={{ width: "50%" }}
-                  multiline
-                  rows={10}
-                  fullWidth
-                  size="small"
-                  value={values.lesson_description}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={
-                    touched.lesson_description &&
-                    Boolean(errors.lesson_description)
-                  }
-                  helperText={
-                    touched.lesson_description &&
-                    Boolean(errors.lesson_description) &&
-                    errors.lesson_description
-                  }
-                ></TextField>
-              </Grid>
-              <Grid container justifyContent={"space-between"}>
-                <Typography>
-                  ภาษา<span style={{ color: "red" }}>*</span>
-                </Typography>
-                <TextField
-                  select
-                  id="language"
-                  name="language"
-                  sx={{ width: "50%" }}
-                  fullWidth
-                  size="small"
-                  value={values.language}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.language && Boolean(errors.language)}
-                  helperText={
-                    touched.language &&
-                    Boolean(errors.language) &&
-                    errors.language
-                  }
-                >
-                  {languageItems.map(
-                    (option: { value: string; label: string }) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    )
-                  )}
-                </TextField>
-              </Grid>
-              <Grid container justifyContent={"space-between"}>
-                <Typography>
-                  สถานะ<span style={{ color: "red" }}>*</span>
-                </Typography>
-                <Box display={"flex"} alignItems={"center"}>
-                  <Typography fontWeight={values.active ? "500" : "800"}>
-                    InActive
-                  </Typography>
-                  <Switch
-                    id="active"
-                    checked={values.active}
-                    value={values.active}
-                    onChange={handleChange}
-                  ></Switch>
-                  <Typography fontWeight={values.active ? "800" : "500"}>
-                    Active
-                  </Typography>
-                </Box>
-              </Grid>
-            </Grid>
-          </DialogContent>
-          <DialogActions sx={{ justifyContent: "center", paddingY: 3 }}>
-            <Button type="submit" variant="contained" sx={{ width: 345 }}>
-              Submit
-            </Button>
-          </DialogActions>
-        </form>
-      </CUModal>
       <DModal
         open={openDelete}
         setOpen={setOpenDelete}
