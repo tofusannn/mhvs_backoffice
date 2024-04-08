@@ -1,6 +1,7 @@
 export type ITypeChapter = {
   index: number;
   lesson_id: number;
+  img_id: number;
   chapter_name: string;
   chapter_pre_description: string;
   chapter_description: string;
@@ -10,6 +11,7 @@ export type ITypeChapter = {
   post_test: ITypePostTest;
   video: ITypeVideo;
   // file: ITypeFile;
+  file_path: string;
   homework: ITypeHomework;
 };
 
@@ -23,6 +25,7 @@ export type ITypeChapterBody = {
 };
 
 export type ITypeChapterBodyChapter = {
+  img_id: number;
   chapter_name: string;
   chapter_pre_description: string;
   chapter_description: string;

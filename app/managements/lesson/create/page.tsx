@@ -115,6 +115,7 @@ const CreateLessonPage = (props: Props) => {
   }
 
   const validationSchema = yup.object({
+    img_id: yup.number().min(1, "โปรดระบุ").required("โปรดระบุ"),
     lesson_name: yup.string().required("โปรดระบุ"),
     lesson_description: yup.string().required("โปรดระบุ"),
     language: yup.string().required("โปรดระบุ"),

@@ -11,8 +11,10 @@ import {
   CardHeader,
   CircularProgress,
   Divider,
+  Grid,
   IconButton,
   MenuItem,
+  Skeleton,
   Stack,
   TextField,
   Typography,
@@ -28,12 +30,19 @@ import {
   useFormik,
 } from "formik";
 import Toast from "@/components/common/Toast";
-import { AddCircleOutline, Close } from "@mui/icons-material";
+import {
+  AddCircleOutline,
+  Close,
+  CloudUpload,
+  Delete,
+} from "@mui/icons-material";
 import { useRouter, useSearchParams } from "next/navigation";
 import QuestionService from "@/api/Managements/QuestionService";
 import Cookies from "js-cookie";
 import { ITypeQuestion } from "@/redux/question/type";
 import ChapterService from "@/api/Managements/ChapterService";
+import Image from "next/image";
+import FileService from "@/api/FileService";
 
 type Props = {};
 
@@ -78,6 +87,7 @@ const initialValues: ITypeChapterBody = {
   },
   chapters: [
     {
+      img_id: 0,
       chapter_name: "",
       chapter_pre_description: "",
       chapter_description: "",
@@ -114,6 +124,9 @@ const CreateChaptersPage = (props: Props) => {
   const [dataForm, setDataForm] = useState(initialValues);
   const [questionList, setQuestionList] = useState<ITypeQuestion[]>([]);
   const [reloadPage, setReloadPage] = useState(true);
+  const [imageExam2, setImageExam2] = useState<
+    { index: number; path: string }[]
+  >([]);
   setTimeout(() => setReloadPage(false), 1000);
 
   useEffect(() => {
@@ -123,12 +136,27 @@ const CreateChaptersPage = (props: Props) => {
     getQuestionList();
   }, []);
 
+  function deleteImageExam2(idx: number) {
+    let newArr: { index: number; path: string }[] = [];
+    imageExam2.map((i) => {
+      newArr.push(i);
+    });
+    const index = newArr.findIndex((e) => e.index === idx);
+    newArr.splice(index, 1);
+    setImageExam2(newArr);
+  }
+
   async function getChapterDetails() {
     let id = parseInt(searchParams.get("id") || "");
     let respons = await ChapterService.getPutChapterByLessonId(id).then(
       (res: any) => res
     );
-    if (respons.status) {
+    let newArr: { index: number; path: string }[] = [];
+    respons.result.chapters.map((i: any) => {
+      newArr.push({ index: i.index, path: i.file_path });
+    });
+    if (respons.msg === "success") {
+      setImageExam2(newArr);
       setDataForm({ ...respons.result });
     }
   }
@@ -137,7 +165,7 @@ const CreateChaptersPage = (props: Props) => {
     let respons = await QuestionService.getQuestionList().then(
       (res: any) => res
     );
-    if (respons.status) {
+    if (respons.msg === "success") {
       respons = respons.result.sort((a: ITypeQuestion, b: ITypeQuestion) => {
         return a.id - b.id;
       });
@@ -153,6 +181,7 @@ const CreateChaptersPage = (props: Props) => {
     }),
     chapters: yup.array().of(
       yup.object({
+        img_id: yup.number().min(1, "โปรดระบุ").required("โปรดระบุ"),
         chapter_name: yup.string().required("โปรดระบุ"),
         chapter_pre_description: yup.string().required("โปรดระบุ"),
         chapter_description: yup.string().required("โปรดระบุ"),
@@ -302,7 +331,9 @@ const CreateChaptersPage = (props: Props) => {
                                         size="small"
                                         disabled
                                         {...getFieldProps(`lesson_id`)}
-                                        error={errorFields(`lesson_id`)}
+                                        error={Boolean(
+                                          errorFields(`lesson_id`)
+                                        )}
                                         helperText={errorFields(`lesson_id`)}
                                       />
                                     </Stack>
@@ -323,7 +354,9 @@ const CreateChaptersPage = (props: Props) => {
                                         fullWidth
                                         size="small"
                                         {...getFieldProps(`homework.name`)}
-                                        error={errorFields(`homework.name`)}
+                                        error={Boolean(
+                                          errorFields(`homework.name`)
+                                        )}
                                         helperText={errorFields(
                                           `homework.name`
                                         )}
@@ -336,8 +369,8 @@ const CreateChaptersPage = (props: Props) => {
                                         {...getFieldProps(
                                           `homework.description`
                                         )}
-                                        error={errorFields(
-                                          `homework.description`
+                                        error={Boolean(
+                                          errorFields(`homework.description`)
                                         )}
                                         helperText={errorFields(
                                           `homework.description`
@@ -352,6 +385,42 @@ const CreateChaptersPage = (props: Props) => {
                               </CardContent>
                             </Card>
                             {values.chapters.map((i, idx) => {
+                              const imageExam2Obj = imageExam2.find(
+                                (e) => e.index === idx
+                              );
+                              async function handleUploadClick2(
+                                event: React.ChangeEvent<HTMLInputElement>
+                              ) {
+                                if (!event.target.files) return;
+                                var file = event.target.files[0];
+                                let newArr: { index: number; path: string }[] =
+                                  [];
+                                imageExam2.map((i) => {
+                                  newArr.push(i);
+                                });
+                                await FileService.uploadFile(file).then(
+                                  (res: any) => {
+                                    if (res.msg === "success") {
+                                      newArr.push({
+                                        index: idx,
+                                        path: res.result.file_path,
+                                      });
+                                      setImageExam2(newArr);
+                                      setFieldValue(
+                                        `chapters.${idx}.img_id`,
+                                        res.result.id,
+                                        false
+                                      );
+                                    } else {
+                                      setOpenToast(true);
+                                      setToastData({
+                                        msg: res.msg,
+                                        status: false,
+                                      });
+                                    }
+                                  }
+                                );
+                              }
                               return (
                                 <Card key={idx}>
                                   <CardContent>
@@ -390,6 +459,90 @@ const CreateChaptersPage = (props: Props) => {
                                         alignItems={"start"}
                                       >
                                         <TitleTextField>
+                                          รูปภาพ
+                                          <span style={{ color: "red" }}>
+                                            *
+                                          </span>
+                                        </TitleTextField>
+                                        <Grid
+                                          container
+                                          sx={{
+                                            justifyContent: "end",
+                                            position: "relative",
+                                            width: "50%",
+                                            height: 250,
+                                          }}
+                                        >
+                                          {imageExam2Obj ? (
+                                            <Image
+                                              src={`https://public.aorsortor.online${imageExam2Obj.path}`}
+                                              alt={"image"}
+                                              style={{ objectFit: "contain" }}
+                                              fill
+                                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                            />
+                                          ) : (
+                                            <Skeleton
+                                              variant="rounded"
+                                              width={"100%"}
+                                              height={250}
+                                              animation={false}
+                                            />
+                                          )}
+                                        </Grid>
+                                      </Stack>
+                                      <Stack
+                                        textAlign={"end"}
+                                        alignItems={"end"}
+                                      >
+                                        {imageExam2Obj ? (
+                                          <Button
+                                            sx={{ width: 345 }}
+                                            color="error"
+                                            variant="contained"
+                                            startIcon={<Delete />}
+                                            onClick={() =>
+                                              deleteImageExam2(idx)
+                                            }
+                                          >
+                                            Delete Image
+                                          </Button>
+                                        ) : (
+                                          <Button
+                                            sx={{ width: 345 }}
+                                            component="label"
+                                            role={undefined}
+                                            variant="contained"
+                                            tabIndex={-1}
+                                            startIcon={<CloudUpload />}
+                                          >
+                                            Upload Image
+                                            <VisuallyHiddenInput
+                                              type="file"
+                                              accept="image/*"
+                                              onChange={handleUploadClick2}
+                                            />
+                                          </Button>
+                                        )}
+                                        <Typography
+                                          sx={{
+                                            fontSize: 14,
+                                            color: "red",
+                                            marginTop: 1,
+                                            display: imageExam2Obj
+                                              ? "none"
+                                              : "block",
+                                          }}
+                                        >
+                                          *กรุณาเลือกรูปภาพ
+                                        </Typography>
+                                      </Stack>
+                                      <Stack
+                                        direction={"row"}
+                                        justifyContent={"space-between"}
+                                        alignItems={"start"}
+                                      >
+                                        <TitleTextField>
                                           หัวข้อบท
                                           <span style={{ color: "red" }}>
                                             *
@@ -404,8 +557,10 @@ const CreateChaptersPage = (props: Props) => {
                                             {...getFieldProps(
                                               `chapters.${idx}.chapter_name`
                                             )}
-                                            error={errorFields(
-                                              `chapters.${idx}.chapter_name`
+                                            error={Boolean(
+                                              errorFields(
+                                                `chapters.${idx}.chapter_name`
+                                              )
                                             )}
                                             helperText={errorFields(
                                               `chapters.${idx}.chapter_name`
@@ -433,8 +588,10 @@ const CreateChaptersPage = (props: Props) => {
                                             {...getFieldProps(
                                               `chapters.${idx}.chapter_pre_description`
                                             )}
-                                            error={errorFields(
-                                              `chapters.${idx}.chapter_pre_description`
+                                            error={Boolean(
+                                              errorFields(
+                                                `chapters.${idx}.chapter_pre_description`
+                                              )
                                             )}
                                             helperText={errorFields(
                                               `chapters.${idx}.chapter_pre_description`
@@ -462,8 +619,10 @@ const CreateChaptersPage = (props: Props) => {
                                             {...getFieldProps(
                                               `chapters.${idx}.chapter_description`
                                             )}
-                                            error={errorFields(
-                                              `chapters.${idx}.chapter_description`
+                                            error={Boolean(
+                                              errorFields(
+                                                `chapters.${idx}.chapter_description`
+                                              )
                                             )}
                                             helperText={errorFields(
                                               `chapters.${idx}.chapter_description`
@@ -491,8 +650,10 @@ const CreateChaptersPage = (props: Props) => {
                                             {...getFieldProps(
                                               `chapters.${idx}.pre_test.name`
                                             )}
-                                            error={errorFields(
-                                              `chapters.${idx}.pre_test.name`
+                                            error={Boolean(
+                                              errorFields(
+                                                `chapters.${idx}.pre_test.name`
+                                              )
                                             )}
                                             helperText={errorFields(
                                               `chapters.${idx}.pre_test.name`
@@ -506,8 +667,10 @@ const CreateChaptersPage = (props: Props) => {
                                             {...getFieldProps(
                                               `chapters.${idx}.pre_test.description`
                                             )}
-                                            error={errorFields(
-                                              `chapters.${idx}.pre_test.description`
+                                            error={Boolean(
+                                              errorFields(
+                                                `chapters.${idx}.pre_test.description`
+                                              )
                                             )}
                                             helperText={errorFields(
                                               `chapters.${idx}.pre_test.description`
@@ -522,13 +685,22 @@ const CreateChaptersPage = (props: Props) => {
                                             {...getFieldProps(
                                               `chapters.${idx}.pre_test.test_id`
                                             )}
-                                            error={errorFields(
-                                              `chapters.${idx}.pre_test.test_id`
+                                            error={Boolean(
+                                              errorFields(
+                                                `chapters.${idx}.pre_test.test_id`
+                                              )
                                             )}
                                             helperText={errorFields(
                                               `chapters.${idx}.pre_test.test_id`
                                             )}
                                           >
+                                            <MenuItem
+                                              value={0}
+                                              disabled
+                                              selected
+                                            >
+                                              กรุณาเลือก
+                                            </MenuItem>
                                             {questionList.map((x) => (
                                               <MenuItem key={x.id} value={x.id}>
                                                 {x.name}
@@ -557,8 +729,10 @@ const CreateChaptersPage = (props: Props) => {
                                             {...getFieldProps(
                                               `chapters.${idx}.post_test.name`
                                             )}
-                                            error={errorFields(
-                                              `chapters.${idx}.post_test.name`
+                                            error={Boolean(
+                                              errorFields(
+                                                `chapters.${idx}.post_test.name`
+                                              )
                                             )}
                                             helperText={errorFields(
                                               `chapters.${idx}.post_test.name`
@@ -572,8 +746,10 @@ const CreateChaptersPage = (props: Props) => {
                                             {...getFieldProps(
                                               `chapters.${idx}.post_test.description`
                                             )}
-                                            error={errorFields(
-                                              `chapters.${idx}.post_test.description`
+                                            error={Boolean(
+                                              errorFields(
+                                                `chapters.${idx}.post_test.description`
+                                              )
                                             )}
                                             helperText={errorFields(
                                               `chapters.${idx}.post_test.description`
@@ -588,13 +764,22 @@ const CreateChaptersPage = (props: Props) => {
                                             {...getFieldProps(
                                               `chapters.${idx}.post_test.test_id`
                                             )}
-                                            error={errorFields(
-                                              `chapters.${idx}.post_test.test_id`
+                                            error={Boolean(
+                                              errorFields(
+                                                `chapters.${idx}.post_test.test_id`
+                                              )
                                             )}
                                             helperText={errorFields(
                                               `chapters.${idx}.post_test.test_id`
                                             )}
                                           >
+                                            <MenuItem
+                                              value={0}
+                                              disabled
+                                              selected
+                                            >
+                                              กรุณาเลือก
+                                            </MenuItem>
                                             {questionList.map((x) => (
                                               <MenuItem key={x.id} value={x.id}>
                                                 {x.name}
@@ -623,8 +808,10 @@ const CreateChaptersPage = (props: Props) => {
                                             {...getFieldProps(
                                               `chapters.${idx}.video.name`
                                             )}
-                                            error={errorFields(
-                                              `chapters.${idx}.video.name`
+                                            error={Boolean(
+                                              errorFields(
+                                                `chapters.${idx}.video.name`
+                                              )
                                             )}
                                             helperText={errorFields(
                                               `chapters.${idx}.video.name`
@@ -638,8 +825,10 @@ const CreateChaptersPage = (props: Props) => {
                                             {...getFieldProps(
                                               `chapters.${idx}.video.description`
                                             )}
-                                            error={errorFields(
-                                              `chapters.${idx}.video.description`
+                                            error={Boolean(
+                                              errorFields(
+                                                `chapters.${idx}.video.description`
+                                              )
                                             )}
                                             helperText={errorFields(
                                               `chapters.${idx}.video.description`
@@ -697,8 +886,10 @@ const CreateChaptersPage = (props: Props) => {
                                                               {...getFieldProps(
                                                                 `chapters.${idx}.video.link.${idx2}.name`
                                                               )}
-                                                              error={errorFields(
-                                                                `chapters.${idx}.video.link.${idx2}.name`
+                                                              error={Boolean(
+                                                                errorFields(
+                                                                  `chapters.${idx}.video.link.${idx2}.name`
+                                                                )
                                                               )}
                                                               helperText={errorFields(
                                                                 `chapters.${idx}.video.link.${idx2}.name`
@@ -714,8 +905,10 @@ const CreateChaptersPage = (props: Props) => {
                                                               {...getFieldProps(
                                                                 `chapters.${idx}.video.link.${idx2}.description`
                                                               )}
-                                                              error={errorFields(
-                                                                `chapters.${idx}.video.link.${idx2}.description`
+                                                              error={Boolean(
+                                                                errorFields(
+                                                                  `chapters.${idx}.video.link.${idx2}.description`
+                                                                )
                                                               )}
                                                               helperText={errorFields(
                                                                 `chapters.${idx}.video.link.${idx2}.description`
@@ -731,8 +924,10 @@ const CreateChaptersPage = (props: Props) => {
                                                               {...getFieldProps(
                                                                 `chapters.${idx}.video.link.${idx2}.link`
                                                               )}
-                                                              error={errorFields(
-                                                                `chapters.${idx}.video.link.${idx2}.link`
+                                                              error={Boolean(
+                                                                errorFields(
+                                                                  `chapters.${idx}.video.link.${idx2}.link`
+                                                                )
                                                               )}
                                                               helperText={errorFields(
                                                                 `chapters.${idx}.video.link.${idx2}.link`
@@ -819,6 +1014,18 @@ const CreateChaptersPage = (props: Props) => {
 };
 
 export default CreateChaptersPage;
+
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
 
 const TitleText = styled(Typography)({
   fontWeight: 600,

@@ -14,11 +14,16 @@ import DataTable from "@/components/table/DataTable";
 import HeaderText from "@/components/typography/HeaderText";
 import { Delete, Edit } from "@mui/icons-material";
 import { TableBody, TableRow, TableCell, IconButton } from "@mui/material";
+import Image from "next/image";
 
 const headCells = [
   {
     id: "index",
     label: "No.",
+  },
+  {
+    id: "img_id",
+    label: "Banner",
   },
   {
     id: "chapter_name",
@@ -124,7 +129,8 @@ const ChapterManagementsPage = () => {
       setIdDelete(rows.index);
     } else {
       router.push(
-        `/managements/chapter/create/?id=${search}&type=${params === "edit" ? "edit" : "create"
+        `/managements/chapter/create/?id=${search}&type=${
+          params === "edit" ? "edit" : "create"
         }`
       );
     }
@@ -168,6 +174,15 @@ const ChapterManagementsPage = () => {
             return (
               <TableRow tabIndex={-1} key={index}>
                 <TableCell>{row.index}</TableCell>
+                <TableCell sx={{ position: "relative" }}>
+                  <Image
+                    src={`https://public.aorsortor.online${row.file_path}`}
+                    alt={"banner"}
+                    fill
+                    style={{ objectFit: "contain" }}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
+                </TableCell>
                 <TableCell
                   sx={{
                     maxWidth: 200,
