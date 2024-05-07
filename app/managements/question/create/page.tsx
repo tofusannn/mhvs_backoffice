@@ -142,15 +142,15 @@ const CreateQuestionPage = (props: Props) => {
   const validationSchema = yup.object({
     name: yup.string().required("โปรดระบุ"),
     description: yup.string().required("โปรดระบุ"),
-    estimate_score_pre: yup.number().min(1, "โปรดระบุ").required("โปรดระบุ"),
-    estimate_score_quiz: yup.number().min(1, "โปรดระบุ").required("โปรดระบุ"),
+    // estimate_score_pre: yup.number().min(1, "โปรดระบุ").required("โปรดระบุ"),
+    // estimate_score_quiz: yup.number().min(1, "โปรดระบุ").required("โปรดระบุ"),
     question: yup.array().of(
       yup.object().shape({
         question: yup.string().required("โปรดระบุ"),
         answer: yup.array().of(
           yup.object().shape({
             choice: yup.string().required("โปรดระบุ"),
-            score: yup.number().min(1, "โปรดระบุ").required("โปรดระบุ"),
+            // score: yup.number().min(1, "โปรดระบุ").required("โปรดระบุ"),
           })
         ),
       })
