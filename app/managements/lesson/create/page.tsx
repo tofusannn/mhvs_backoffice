@@ -106,7 +106,7 @@ const CreateLessonPage = (props: Props) => {
         });
         setImageExam(res.result.file_path);
         setImageExam2(newArr);
-        setDataForm(res.result);
+        setDataForm({ ...res.result, lesson_id: res.result.id });
       } else {
         setOpenToast(true);
         setToastData({ msg: res.msg, status: false });
