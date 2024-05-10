@@ -3,6 +3,7 @@
 import ReportsService from "@/api/ReportsService";
 import HeaderText from "@/components/typography/HeaderText";
 import {
+  ITypeUser,
   ITypeUserAns,
   ITypeUserLesson,
   ITypeUserQus,
@@ -30,6 +31,11 @@ import { ITypeLesson } from "@/redux/lesson/types";
 import { useRouter } from "next/navigation";
 
 type Props = {};
+
+const dataUser: ITypeUser = {
+  start_date: "",
+  end_date: "",
+};
 
 const dataAns: ITypeUserAns = {
   start_date: "",
@@ -70,6 +76,7 @@ function downloadCSV(res: any) {
 
 const ReportPage = (props: Props) => {
   const router = useRouter();
+  const [paramsUser, setParamsUser] = useState(dataUser);
   const [paramsAns, setParamsAns] = useState(dataAns);
   const [paramsLesson, setParamsLesson] = useState(dataLesson);
   const [paramsQus, setParamsQus] = useState(dataQus);
@@ -91,6 +98,11 @@ const ReportPage = (props: Props) => {
 
   function downloadFile(type: string) {
     switch (type) {
+      case "user":
+        ReportsService.downloadFileUser(paramsUser).then((res: any) => {
+          downloadCSV(res);
+        });
+        break;
       case "ans":
         ReportsService.downloadFileUserAns(paramsAns).then((res: any) => {
           downloadCSV(res);
@@ -117,6 +129,9 @@ const ReportPage = (props: Props) => {
       value = dayjs(e).format("YYYY-MM-DD");
     }
     switch (type) {
+      case "user":
+        setParamsUser((i) => ({ ...i, [name]: value }));
+        break;
       case "ans":
         setParamsAns((i) => ({ ...i, [name]: value }));
         break;
@@ -135,6 +150,35 @@ const ReportPage = (props: Props) => {
       <Card sx={{ boxShadow: "none", marginTop: 3 }}>
         <CardContent>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
+
+            <Title>User</Title>
+            <Grid container columnGap={2} my={2}>
+              <Grid item xs={2.5}>
+                <DatePicker
+                  sx={{ width: "100%" }}
+                  format="YYYY-MM-DD"
+                  label="Start Date"
+                  onChange={(e) => setParams(e, "start_date", "user")}
+                />
+              </Grid>
+              <Grid item xs={2.5}>
+                <DatePicker
+                  sx={{ width: "100%" }}
+                  format="YYYY-MM-DD"
+                  label="End Date"
+                  onChange={(e) => setParams(e, "end_date", "user")}
+                />
+              </Grid>
+            </Grid>
+            <Button
+              sx={{ marginBottom: 2 }}
+              variant="contained"
+              onClick={() => downloadFile("user")}
+            >
+              Submit
+            </Button>
+
+
             <Title>User Answer</Title>
             <Grid container columnGap={2} my={2}>
               <Grid item xs={2.5}>

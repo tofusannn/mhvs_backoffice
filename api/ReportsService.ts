@@ -1,4 +1,5 @@
 import {
+  ITypeUser,
   ITypeUserAns,
   ITypeUserLesson,
   ITypeUserQus,
@@ -7,6 +8,14 @@ import api from "./https_request";
 import Cookies from "js-cookie";
 
 const ReportsService = {
+  downloadFileUser(query: ITypeUser) {
+    const token = Cookies.get("token");
+
+    return api.get({
+      path: `/download_file_user?start_date=${query.start_date}&end_date=${query.end_date}`,
+      headers: { token: token },
+    });
+  },
   downloadFileUserAns(query: ITypeUserAns) {
     const token = Cookies.get("token");
 

@@ -1,3 +1,8 @@
+export type ITypeUser = {
+  start_date: string;
+  end_date: string;
+};
+
 export type ITypeUserAns = {
   start_date: string;
   end_date: string;
