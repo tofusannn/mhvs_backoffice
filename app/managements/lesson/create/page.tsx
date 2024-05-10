@@ -121,7 +121,7 @@ const CreateLessonPage = (props: Props) => {
     language: yup.string().required("โปรดระบุ"),
     prominent_point: yup.array().of(
       yup.object().shape({
-        // img_id: yup.number().min(1, "โปรดระบุ").required("โปรดระบุ"),
+        img_id: yup.number().min(1, "โปรดระบุ").required("โปรดระบุ"),
         name: yup.string().required("โปรดระบุ"),
         description: yup.string().required("โปรดระบุ"),
       })
