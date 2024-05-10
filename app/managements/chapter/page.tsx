@@ -175,13 +175,17 @@ const ChapterManagementsPage = () => {
               <TableRow tabIndex={-1} key={index}>
                 <TableCell>{row.index}</TableCell>
                 <TableCell sx={{ position: "relative" }}>
-                  <Image
-                    src={`https://public.aorsortor.online${row.file_path}`}
-                    alt={"banner"}
-                    fill
-                    style={{ objectFit: "contain" }}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  />
+                  {row.file_path ? (
+                    <Image
+                      src={`https://public.aorsortor.online${row.file_path}`}
+                      alt={"banner"}
+                      fill
+                      style={{ objectFit: "contain" }}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                  ) : (
+                    <div></div>
+                  )}
                 </TableCell>
                 <TableCell
                   sx={{

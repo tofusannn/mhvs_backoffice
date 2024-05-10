@@ -152,9 +152,10 @@ const CreateChaptersPage = (props: Props) => {
       (res: any) => res
     );
     let newArr: { index: number; path: string }[] = [];
-    respons.result.chapters.map((i: any) => {
-      newArr.push({ index: i.index, path: i.file_path });
+    respons.result.chapters.map((i: any, index: number) => {
+      newArr.push({ index: index, path: i.file_path });
     });
+
     if (respons.msg === "success") {
       setImageExam2(newArr);
       setDataForm({ ...respons.result });
