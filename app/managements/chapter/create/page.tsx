@@ -185,7 +185,7 @@ const CreateChaptersPage = (props: Props) => {
         img_id: yup.number().min(1, "โปรดระบุ").required("โปรดระบุ"),
         chapter_name: yup.string().required("โปรดระบุ"),
         chapter_pre_description: yup.string().required("โปรดระบุ"),
-        chapter_description: yup.string().required("โปรดระบุ"),
+        chapter_description: yup.string(),
         pre_test: yup.object({
           name: yup.string().required("โปรดระบุ"),
           description: yup.string().required("โปรดระบุ"),
@@ -600,7 +600,7 @@ const CreateChaptersPage = (props: Props) => {
                                           />
                                         </Stack>
                                       </Stack>
-                                      <Stack
+                                      {/* <Stack
                                         direction={"row"}
                                         justifyContent={"space-between"}
                                         alignItems={"start"}
@@ -630,7 +630,7 @@ const CreateChaptersPage = (props: Props) => {
                                             )}
                                           />
                                         </Stack>
-                                      </Stack>
+                                      </Stack> */}
                                       <Stack
                                         direction={"row"}
                                         justifyContent={"space-between"}

@@ -4,7 +4,6 @@ export type ITypeChapter = {
   img_id: number;
   chapter_name: string;
   chapter_pre_description: string;
-  chapter_description: string;
   display: true;
   practical: false;
   pre_test: ITypePreTest;

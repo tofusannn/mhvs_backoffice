@@ -103,25 +103,14 @@ const CreateQuestionPage = (props: Props) => {
             is_input: boolean;
           }[];
         }[] = [];
-        let newAnswer: {
-          choice: string;
-          score: number;
-          is_true: boolean;
-          is_input: boolean;
-        }[] = [];
+        // let newAnswer: {
+        //   choice: string;
+        //   score: number;
+        //   is_true: boolean;
+        //   is_input: boolean;
+        // }[] = [];
         res.result.question.map((i: any) => {
-          i.answer.map((j: any) => {
-            newAnswer.push({
-              choice: j.choice || "",
-              score: j.score || 0,
-              is_true: j.is_true || false,
-              is_input: j.is_input || false,
-            });
-          });
-          newQuestion.push({
-            question: i.question,
-            answer: newAnswer,
-          });
+          newQuestion.push(i);
         });
         let newData = {
           question_detail_id: id,
