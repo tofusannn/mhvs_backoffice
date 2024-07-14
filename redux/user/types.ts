@@ -13,6 +13,7 @@ export type ITypeUser = {
   date_of_birth: string;
   img_id: number;
   create_datetime: string;
+  role: string;
 };
 
 export type ITypeUserParams = {

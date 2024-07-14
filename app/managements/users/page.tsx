@@ -11,13 +11,17 @@ import {
   Button,
   DialogActions,
   DialogContent,
+  FormControlLabel,
   Grid,
   IconButton,
   MenuItem,
+  Stack,
+  Switch,
   TableBody,
   TableCell,
   TableRow,
   TextField,
+  ToggleButton,
   Typography,
   styled,
 } from "@mui/material";
@@ -54,6 +58,10 @@ const headCells = [
     id: "create_datetime",
     label: "Register Date",
   },
+  {
+    id: "role",
+    label: "บทบาท",
+  },
 ];
 
 const initialValues: ITypeUser = {
@@ -71,6 +79,7 @@ const initialValues: ITypeUser = {
   date_of_birth: "2023-12-01",
   img_id: 0,
   create_datetime: "",
+  role: "user",
 };
 
 const nationalityList = [
@@ -147,6 +156,7 @@ const UserManagementsPage = () => {
         "nationality",
         "gender",
         "phone",
+        "role",
       ];
       fields.forEach((field) => setFieldValue(field, rows[field], false));
       setType(params);
@@ -293,7 +303,7 @@ const UserManagementsPage = () => {
                   {row.nationality === null
                     ? "-"
                     : row.nationality.charAt(0).toUpperCase() +
-                    row.nationality.slice(1)}
+                      row.nationality.slice(1)}
                 </TableCell>
                 <TableCell>
                   {row.gender.charAt(0).toUpperCase() + row.gender.slice(1)}
@@ -302,6 +312,7 @@ const UserManagementsPage = () => {
                 <TableCell>
                   {dayjs(row.create_datetime).format("DD/MM/YYYY")}
                 </TableCell>
+                <TableCell>{row.role === "user" ? "User" : "Admin"}</TableCell>
                 <TableCell>
                   <IconButton onClick={() => openDialog("edit", row)}>
                     <Edit />
@@ -394,6 +405,7 @@ const UserManagementsPage = () => {
                 <Typography>นามสกุล</Typography>
                 <TextField
                   id="last_name"
+                  name="last_name"
                   sx={{ width: "50%" }}
                   fullWidth
                   size="small"
@@ -415,6 +427,7 @@ const UserManagementsPage = () => {
                 <TextField
                   select
                   id="nationality"
+                  name="nationality"
                   sx={{ width: "50%" }}
                   fullWidth
                   size="small"
@@ -442,6 +455,7 @@ const UserManagementsPage = () => {
                 <TextField
                   select
                   id="gender"
+                  name="gender"
                   sx={{ width: "50%" }}
                   fullWidth
                   size="small"
@@ -466,6 +480,7 @@ const UserManagementsPage = () => {
                 </Typography>
                 <TextField
                   id="phone"
+                  name="phone"
                   sx={{ width: "50%" }}
                   fullWidth
                   size="small"
@@ -477,6 +492,27 @@ const UserManagementsPage = () => {
                     touched.phone && Boolean(errors.phone) && errors.phone
                   }
                 ></TextField>
+              </Grid>
+              <Grid container justifyContent={"space-between"}>
+                <Typography>บทบาท</Typography>
+                {/* {console.log(values.role)} */}
+                <Stack direction={"row"} alignItems={"center"}>
+                  <Typography>User</Typography>
+                  <Switch
+                    id="role"
+                    name="role"
+                    checked={values.role === "admin"}
+                    onChange={() =>
+                      setFieldValue(
+                        "role",
+                        values.role === "user" ? "admin" : "user",
+                        false
+                      )
+                    }
+                  />
+
+                  <Typography>Admin</Typography>
+                </Stack>
               </Grid>
             </Grid>
           </DialogContent>
