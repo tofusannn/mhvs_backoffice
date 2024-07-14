@@ -32,7 +32,7 @@ import Cookies from "js-cookie";
 import Toast from "@/components/common/Toast";
 import DModal from "@/components/modal/DModal";
 import dayjs from "dayjs";
-
+const mainUser = Cookies.get("phone");
 const headCells = [
   {
     id: "id",
@@ -493,7 +493,13 @@ const UserManagementsPage = () => {
                   }
                 ></TextField>
               </Grid>
-              <Grid container justifyContent={"space-between"}>
+              <Grid
+                container
+                justifyContent={"space-between"}
+                display={
+                  type === "edit" && mainUser === values.phone ? "none" : "flex"
+                }
+              >
                 <Typography>บทบาท</Typography>
                 {/* {console.log(values.role)} */}
                 <Stack direction={"row"} alignItems={"center"}>

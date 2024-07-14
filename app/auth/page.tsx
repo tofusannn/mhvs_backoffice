@@ -45,6 +45,7 @@ const LoginPage = (props: Props) => {
       onSubmit: (values) => {
         AuthService.login(values).then((res: any) => {
           if (res.msg === "success") {
+            Cookies.set("phone", values.phone);
             Cookies.set("token", res.result.token);
             Cookies.set("token_expire", res.result.token_expire);
             router.push("/dashboard");
