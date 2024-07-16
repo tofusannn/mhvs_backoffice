@@ -350,8 +350,10 @@ const CreateChaptersPage = (props: Props) => {
                                     </TitleTextField>
                                     <Stack spacing={2}>
                                       <TextField
+                                        multiline
+                                        rows={2}
                                         label="หัวข้อ"
-                                        sx={{ width: 345 }}
+                                        sx={{ width: 600 }}
                                         fullWidth
                                         size="small"
                                         {...getFieldProps(`homework.name`)}
@@ -363,8 +365,10 @@ const CreateChaptersPage = (props: Props) => {
                                         )}
                                       />
                                       <TextField
+                                        multiline
+                                        rows={5}
                                         label="รายละเอียด"
-                                        sx={{ width: 345 }}
+                                        sx={{ width: 600 }}
                                         fullWidth
                                         size="small"
                                         {...getFieldProps(
@@ -551,8 +555,10 @@ const CreateChaptersPage = (props: Props) => {
                                         </TitleTextField>
                                         <Stack spacing={2}>
                                           <TextField
+                                            multiline
+                                            rows={2}
                                             label="หัวข้อบท"
-                                            sx={{ width: 345 }}
+                                            sx={{ width: 600 }}
                                             fullWidth
                                             size="small"
                                             {...getFieldProps(
@@ -583,7 +589,9 @@ const CreateChaptersPage = (props: Props) => {
                                         <Stack spacing={2}>
                                           <TextField
                                             label="รายละเอียดบทโดยย่อ"
-                                            sx={{ width: 345 }}
+                                            multiline
+                                            rows={5}
+                                            sx={{ width: 600 }}
                                             fullWidth
                                             size="small"
                                             {...getFieldProps(
@@ -644,8 +652,10 @@ const CreateChaptersPage = (props: Props) => {
                                         </TitleTextField>
                                         <Stack spacing={2}>
                                           <TextField
+                                            multiline
+                                            rows={2}
                                             label="หัวข้อ"
-                                            sx={{ width: 345 }}
+                                            sx={{ width: 600 }}
                                             fullWidth
                                             size="small"
                                             {...getFieldProps(
@@ -662,7 +672,9 @@ const CreateChaptersPage = (props: Props) => {
                                           />
                                           <TextField
                                             label="รายละเอียด"
-                                            sx={{ width: 345 }}
+                                            multiline
+                                            rows={5}
+                                            sx={{ width: 600 }}
                                             fullWidth
                                             size="small"
                                             {...getFieldProps(
@@ -680,7 +692,7 @@ const CreateChaptersPage = (props: Props) => {
                                           <TextField
                                             select
                                             label="แบบทดสอบ"
-                                            sx={{ width: 345 }}
+                                            sx={{ width: 600 }}
                                             fullWidth
                                             size="small"
                                             {...getFieldProps(
@@ -723,8 +735,10 @@ const CreateChaptersPage = (props: Props) => {
                                         </TitleTextField>
                                         <Stack spacing={2}>
                                           <TextField
+                                            multiline
+                                            rows={2}
                                             label="หัวข้อ"
-                                            sx={{ width: 345 }}
+                                            sx={{ width: 600 }}
                                             fullWidth
                                             size="small"
                                             {...getFieldProps(
@@ -741,7 +755,9 @@ const CreateChaptersPage = (props: Props) => {
                                           />
                                           <TextField
                                             label="รายละเอียด"
-                                            sx={{ width: 345 }}
+                                            multiline
+                                            rows={5}
+                                            sx={{ width: 600 }}
                                             fullWidth
                                             size="small"
                                             {...getFieldProps(
@@ -759,7 +775,7 @@ const CreateChaptersPage = (props: Props) => {
                                           <TextField
                                             select
                                             label="แบบทดสอบ"
-                                            sx={{ width: 345 }}
+                                            sx={{ width: 600 }}
                                             fullWidth
                                             size="small"
                                             {...getFieldProps(
@@ -802,8 +818,10 @@ const CreateChaptersPage = (props: Props) => {
                                         </TitleTextField>
                                         <Stack spacing={2}>
                                           <TextField
+                                            multiline
+                                            rows={2}
                                             label="หัวข้อ"
-                                            sx={{ width: 345 }}
+                                            sx={{ width: 600 }}
                                             fullWidth
                                             size="small"
                                             {...getFieldProps(
@@ -820,7 +838,7 @@ const CreateChaptersPage = (props: Props) => {
                                           />
                                           <TextField
                                             label="รายละเอียด"
-                                            sx={{ width: 345 }}
+                                            sx={{ width: 600 }}
                                             fullWidth
                                             size="small"
                                             {...getFieldProps(
@@ -878,9 +896,11 @@ const CreateChaptersPage = (props: Props) => {
                                                           </Stack>
                                                           <Stack spacing={2}>
                                                             <TextField
+                                                              multiline
+                                                              rows={2}
                                                               label="หัวข้อ"
                                                               sx={{
-                                                                width: 345,
+                                                                width: 600,
                                                               }}
                                                               fullWidth
                                                               size="small"
@@ -899,7 +919,7 @@ const CreateChaptersPage = (props: Props) => {
                                                             <TextField
                                                               label="รายละเอียด"
                                                               sx={{
-                                                                width: 345,
+                                                                width: 600,
                                                               }}
                                                               fullWidth
                                                               size="small"
@@ -918,7 +938,7 @@ const CreateChaptersPage = (props: Props) => {
                                                             <TextField
                                                               label="ลิ้งค์"
                                                               sx={{
-                                                                width: 345,
+                                                                width: 600,
                                                               }}
                                                               fullWidth
                                                               size="small"

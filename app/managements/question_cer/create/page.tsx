@@ -214,7 +214,9 @@ const CreateQuestionnairePage = (props: Props) => {
                                       <Stack spacing={2}>
                                         <TextField
                                           label="หัวข้อ"
-                                          sx={{ width: 345 }}
+                                          multiline
+                                          rows={2}
+                                          sx={{ width: 600 }}
                                           fullWidth
                                           size="small"
                                           {...getFieldProps(`name`)}
@@ -235,7 +237,9 @@ const CreateQuestionnairePage = (props: Props) => {
                                       <Stack spacing={2}>
                                         <TextField
                                           label="รายละเอียด"
-                                          sx={{ width: 345 }}
+                                          multiline
+                                          rows={5}
+                                          sx={{ width: 600 }}
                                           fullWidth
                                           size="small"
                                           {...getFieldProps(`description`)}
@@ -304,7 +308,9 @@ const CreateQuestionnairePage = (props: Props) => {
                                           <Stack spacing={2}>
                                             <TextField
                                               label="คำถาม"
-                                              sx={{ width: 345 }}
+                                              multiline
+                                              rows={5}
+                                              sx={{ width: 600 }}
                                               fullWidth
                                               size="small"
                                               {...getFieldProps(

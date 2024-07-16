@@ -164,7 +164,6 @@ const ContentManagementPage = (props: Props) => {
   const validationSchema = yup.object({
     img_id: yup.number().min(1, "โปรดระบุ").required("โปรดระบุ"),
     content_name: yup.string().required("โปรดระบุ"),
-    content_detail: yup.string().required("โปรดระบุ"),
     youtube_link: yup.string().required("โปรดระบุ"),
     language: yup.string().required("โปรดระบุ"),
   });
@@ -488,7 +487,7 @@ const ContentManagementPage = (props: Props) => {
                   }
                 ></TextField>
               </Grid>
-              <Grid container justifyContent={"space-between"}>
+              {/* <Grid container justifyContent={"space-between"}>
                 <Typography>
                   รายละเอียด<span style={{ color: "red" }}>*</span>
                 </Typography>
@@ -512,7 +511,7 @@ const ContentManagementPage = (props: Props) => {
                     errors.content_detail
                   }
                 ></TextField>
-              </Grid>
+              </Grid> */}
               <Grid container justifyContent={"space-between"}>
                 <Typography>
                   Youtube<span style={{ color: "red" }}>*</span>

@@ -314,7 +314,7 @@ const CreateLessonPage = (props: Props) => {
                                   <TextField
                                     multiline
                                     rows={2}
-                                    sx={{ width: "70%" }}
+                                    sx={{ width: 600 }}
                                     fullWidth
                                     size="small"
                                     {...getFieldProps(`lesson_name`)}
@@ -333,8 +333,8 @@ const CreateLessonPage = (props: Props) => {
                                   </TitleTextField>
                                   <TextField
                                     multiline
-                                    rows={10}
-                                    sx={{ width: "70%" }}
+                                    rows={5}
+                                    sx={{ width: 600 }}
                                     fullWidth
                                     size="small"
                                     {...getFieldProps(`lesson_description`)}
@@ -571,7 +571,9 @@ const CreateLessonPage = (props: Props) => {
                                       </TitleTextField>
                                       <Stack spacing={2}>
                                         <TextField
-                                          sx={{ width: 345 }}
+                                          multiline
+                                          rows={2}
+                                          sx={{ width: 600 }}
                                           fullWidth
                                           size="small"
                                           {...getFieldProps(
@@ -597,7 +599,9 @@ const CreateLessonPage = (props: Props) => {
                                       </TitleTextField>
                                       <Stack spacing={2}>
                                         <TextField
-                                          sx={{ width: 345 }}
+                                          multiline
+                                          rows={5}
+                                          sx={{ width: 600 }}
                                           fullWidth
                                           size="small"
                                           {...getFieldProps(
