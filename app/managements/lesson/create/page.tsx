@@ -37,6 +37,8 @@ import {
 import { type } from "os";
 import FileService from "@/api/FileService";
 import Image from "next/image";
+import { ITypeQuestionCer } from "@/redux/question_cer/type";
+import QuestionCerService from "@/api/Managements/QuestionCer";
 
 type Props = {};
 
@@ -73,6 +75,10 @@ const CreateLessonPage = (props: Props) => {
   const [openToast, setOpenToast] = useState(false);
   const [toastData, setToastData] = useState({ msg: "", status: false });
   const [dataForm, setDataForm] = useState(initialValues);
+  const [questionnairList, setQuestionnairList] = useState<ITypeQuestionCer[]>(
+    []
+  );
+
   const [imageExam, setImageExam] = useState("");
   const [imageExam2, setImageExam2] = useState<
     { index: number; path: string }[]
@@ -85,6 +91,7 @@ const CreateLessonPage = (props: Props) => {
     if (id) {
       getLessonById(id);
     }
+    getQuestionCerList();
   }, []);
 
   function deleteImageExam2(idx: number) {
@@ -114,11 +121,26 @@ const CreateLessonPage = (props: Props) => {
     });
   }
 
+  async function getQuestionCerList() {
+    let respons = await QuestionCerService.getQuestionCerList().then(
+      (res: any) => res
+    );
+    if (respons.msg === "success") {
+      respons = respons.result.sort(
+        (a: ITypeQuestionCer, b: ITypeQuestionCer) => {
+          return a.id - b.id;
+        }
+      );
+    }
+    setQuestionnairList(respons);
+  }
+
   const validationSchema = yup.object({
     img_id: yup.number().min(1, "โปรดระบุ").required("โปรดระบุ"),
     lesson_name: yup.string().required("โปรดระบุ"),
     lesson_description: yup.string().required("โปรดระบุ"),
     language: yup.string().required("โปรดระบุ"),
+    questionnaire_cer_id: yup.string().required("โปรดระบุ"),
     prominent_point: yup.array().of(
       yup.object().shape({
         img_id: yup.number().min(1, "โปรดระบุ").required("โปรดระบุ"),
@@ -371,6 +393,38 @@ const CreateLessonPage = (props: Props) => {
                                           value={option.value}
                                         >
                                           {option.label}
+                                        </MenuItem>
+                                      )
+                                    )}
+                                  </TextField>
+                                </Stack>
+                                <Stack
+                                  direction={"row"}
+                                  justifyContent={"space-between"}
+                                  alignItems={"start"}
+                                >
+                                  <TitleTextField>
+                                    Questionaire
+                                    <span style={{ color: "red" }}>*</span>
+                                  </TitleTextField>
+                                  <TextField
+                                    select
+                                    sx={{ width: "345px" }}
+                                    fullWidth
+                                    size="small"
+                                    {...getFieldProps(`questionnaire_cer_id`)}
+                                    error={errorFields(`questionnaire_cer_id`)}
+                                    helperText={errorFields(
+                                      `questionnaire_cer_id`
+                                    )}
+                                  >
+                                    {questionnairList.map(
+                                      (option: ITypeQuestionCer) => (
+                                        <MenuItem
+                                          key={option.id}
+                                          value={option.id}
+                                        >
+                                          {option.name}
                                         </MenuItem>
                                       )
                                     )}
