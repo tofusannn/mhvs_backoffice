@@ -288,7 +288,7 @@ const BannerManagementPage = (props: Props) => {
                 <TableCell>{row.id}</TableCell>
                 <TableCell sx={{ position: "relative" }}>
                   <Image
-                    src={`https://public.aorsortor.online${row.file_path}`}
+                    src={`https://public.aorsortoronline.org${row.file_path}`}
                     alt={"banner"}
                     fill
                     style={{ objectFit: "contain" }}
@@ -340,7 +340,7 @@ const BannerManagementPage = (props: Props) => {
               >
                 {imageExam ? (
                   <Image
-                    src={`https://public.aorsortor.online${imageExam}`}
+                    src={`https://public.aorsortoronline.org${imageExam}`}
                     alt={"image"}
                     style={{ objectFit: "contain" }}
                     fill

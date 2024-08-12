@@ -1,5 +1,5 @@
 var axios = require("axios");
-const url = "https://api.aorsortor.online/admin/v1";
+const url = "https://api.aorsortoronline.org/admin/v1";
 
 type ITypeApi = {
   path: string;

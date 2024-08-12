@@ -10,7 +10,7 @@ const nextConfig = {
     ];
   },
   images: {
-    domains: ["public.aorsortor.online"],
+    domains: ["public.aorsortoronline.org"],
   },
   output: "standalone",
 };

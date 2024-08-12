@@ -166,7 +166,7 @@ const LessonManagementsPage = () => {
                 <TableCell sx={{ position: "relative" }}>
                   {row.file_path ? (
                     <Image
-                      src={`https://public.aorsortor.online${row.file_path}`}
+                      src={`https://public.aorsortoronline.org${row.file_path}`}
                       alt={"banner"}
                       fill
                       style={{ objectFit: "contain" }}

@@ -272,7 +272,7 @@ const CreateLessonPage = (props: Props) => {
                                 >
                                   {imageExam ? (
                                     <Image
-                                      src={`https://public.aorsortor.online${imageExam}`}
+                                      src={`https://public.aorsortoronline.org${imageExam}`}
                                       alt={"image"}
                                       style={{ objectFit: "contain" }}
                                       fill
@@ -557,7 +557,7 @@ const CreateLessonPage = (props: Props) => {
                                       >
                                         {imageExam2Obj ? (
                                           <Image
-                                            src={`https://public.aorsortor.online${imageExam2Obj.path}`}
+                                            src={`https://public.aorsortoronline.org${imageExam2Obj.path}`}
                                             alt={"image"}
                                             style={{ objectFit: "contain" }}
                                             fill

@@ -480,7 +480,7 @@ const CreateChaptersPage = (props: Props) => {
                                         >
                                           {imageExam2Obj ? (
                                             <Image
-                                              src={`https://public.aorsortor.online${imageExam2Obj.path}`}
+                                              src={`https://public.aorsortoronline.org${imageExam2Obj.path}`}
                                               alt={"image"}
                                               style={{ objectFit: "contain" }}
                                               fill

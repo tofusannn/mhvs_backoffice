@@ -318,7 +318,7 @@ const ContentManagementPage = (props: Props) => {
                 <TableCell>{row.id}</TableCell>
                 <TableCell sx={{ position: "relative" }}>
                   <Image
-                    src={`https://public.aorsortor.online${row.file_path}`}
+                    src={`https://public.aorsortoronline.org${row.file_path}`}
                     alt={"content"}
                     fill
                     style={{ objectFit: "contain" }}
@@ -407,7 +407,7 @@ const ContentManagementPage = (props: Props) => {
               >
                 {imageExam ? (
                   <Image
-                    src={`https://public.aorsortor.online${imageExam}`}
+                    src={`https://public.aorsortoronline.org${imageExam}`}
                     alt={"image"}
                     style={{ objectFit: "contain" }}
                     fill
