@@ -52,6 +52,13 @@ const UserService = {
       headers: { token: token },
     });
   },
+
+  postUserAdmin(data: { phone: string; password: string }) {
+    return api.post({
+      path: `/user`,
+      body: data,
+    });
+  },
 };
 
 export default UserService;

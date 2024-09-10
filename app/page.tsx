@@ -46,6 +46,8 @@ export default function MainPage({ children }: { children: React.ReactNode }) {
       } else if (pathname === "/auth") {
         router.push("/dashboard");
       }
+    } else if (pathname === "/auth/register") {
+      return;
     } else {
       router.push("/auth");
     }
@@ -61,7 +63,9 @@ export default function MainPage({ children }: { children: React.ReactNode }) {
           </Main>
         ) : (
           <div>
-            {pathname != "/auth" ? (
+            {pathname === "/auth" || pathname === "/auth/register" ? (
+              <Main>{children}</Main>
+            ) : (
               <div>
                 <Box sx={{ display: "flex" }}>
                   <Navbar open={open} setOpen={setOpen} />
@@ -76,8 +80,6 @@ export default function MainPage({ children }: { children: React.ReactNode }) {
                   </Box>
                 </Box>
               </div>
-            ) : (
-              <Main>{children}</Main>
             )}
           </div>
         )}

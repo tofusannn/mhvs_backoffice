@@ -128,6 +128,7 @@ const UserManagementsPage = () => {
     let respons = await UserService.getUserList(params).then((res: any) => res);
     if (respons.status) {
       respons = respons.result.sort((a: ITypeUser, b: ITypeUser) => {
+        if (!a.id || !b.id) return;
         return a.id - b.id;
       });
     }
@@ -209,6 +210,7 @@ const UserManagementsPage = () => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       if (type === "edit") {
+        if (!values.id) return;
         UserService.putUserById(values.id, values).then((res: any) => {
           if (res.msg === "success") {
             setOpen(false);

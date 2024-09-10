@@ -12,6 +12,7 @@ import {
   InputAdornment,
   InputLabel,
   OutlinedInput,
+  Stack,
   TextField,
   Typography,
   styled,
@@ -33,7 +34,7 @@ const LoginPage = (props: Props) => {
 
   const validationSchema = yup.object({
     phone: yup.string().required("Phone is required"),
-    password: yup.string(),
+    password: yup.string().required("Password is required"),
   });
   const { values, touched, errors, handleBlur, handleSubmit, handleChange } =
     useFormik({
@@ -80,7 +81,12 @@ const LoginPage = (props: Props) => {
             <Typography fontSize={48} fontWeight={700}>
               Login
             </Typography>
-            <Grid sx={{ marginTop: "24px" }}>
+            <Stack
+              marginTop={"48px"}
+              gap={2}
+              textAlign={"start"}
+              marginBottom={"48px"}
+            >
               <TextField
                 id="phone"
                 fullWidth
@@ -92,8 +98,6 @@ const LoginPage = (props: Props) => {
                 error={touched.phone && Boolean(errors.phone)}
                 helperText={errors.phone}
               ></TextField>
-            </Grid>
-            <Grid sx={{ marginTop: "10px" }}>
               <FormControl sx={{ width: "100%" }} variant="outlined">
                 <InputLabel
                   size="small"
@@ -131,15 +135,24 @@ const LoginPage = (props: Props) => {
                   {errors.password}
                 </FormHelperText>
               </FormControl>
+            </Stack>
+            <Grid marginTop={"auto"} container gap={2}>
+              <Button
+                type="submit"
+                sx={{ marginTop: "auto" }}
+                variant="contained"
+                fullWidth
+              >
+                Submit
+              </Button>
+              <Button
+                variant="outlined"
+                fullWidth
+                onClick={() => router.push("/auth/register")}
+              >
+                Register
+              </Button>
             </Grid>
-            <Button
-              type="submit"
-              sx={{ marginTop: "auto" }}
-              variant="contained"
-              fullWidth
-            >
-              Submit
-            </Button>
           </CardContent>
         </Card>
       </From>
@@ -168,5 +181,4 @@ const From = styled("form")(({ theme }) => ({
   display: "flex",
   margin: "0 auto",
   width: 375,
-  height: 375,
 }));

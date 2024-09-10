@@ -1,5 +1,5 @@
 export type ITypeUser = {
-  id: number;
+  id?: number;
   username: string;
   password: string;
   email: string;
@@ -12,8 +12,8 @@ export type ITypeUser = {
   idcard: string;
   date_of_birth: string;
   img_id: number;
-  create_datetime: string;
-  role: string;
+  create_datetime?: string;
+  role?: string;
 };
 
 export type ITypeUserParams = {
