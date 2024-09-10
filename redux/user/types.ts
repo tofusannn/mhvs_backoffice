@@ -21,4 +21,5 @@ export type ITypeUserParams = {
   phone: string;
   start_date: string;
   end_date: string;
+  user_role?: string;
 };

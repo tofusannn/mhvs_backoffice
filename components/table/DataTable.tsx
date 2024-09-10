@@ -8,7 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Button,
   Grid,
@@ -21,6 +21,7 @@ import CUModal from "../modal/CUModal";
 import { ITypeLesson } from "@/redux/lesson/types";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import Cookies from "js-cookie";
 
 type Props = {
   children: React.ReactNode;
@@ -39,6 +40,12 @@ type Props = {
   searchValue?: string;
 };
 
+const selectRole = [
+  { label: "Admin Not Approve", value: "admin_not_approve" },
+  { label: "Admin", value: "admin" },
+  { label: "User", value: "user" },
+];
+
 export default function DataTable({
   children,
   countData,
@@ -55,9 +62,24 @@ export default function DataTable({
   languageList,
   searchValue,
 }: Props) {
+  const role = Cookies.get("user_role");
+  const tableContainerRef = useRef<HTMLDivElement | null>(null); // Reference to the TableContainer
+
   const handleChangePage = (event: any, newPage: number) => {
     setPage(newPage);
+    // Scroll to the top of the TableContainer
+    if (tableContainerRef.current) {
+      tableContainerRef.current.scrollTop = 0;
+    }
   };
+
+  // Ensure the page is within bounds when the rows length changes
+  useEffect(() => {
+    const maxPage = Math.max(0, Math.ceil(countData / rowsPerPage) - 1);
+    if (page > maxPage) {
+      setPage(maxPage);
+    }
+  }, [countData, rowsPerPage, page]);
 
   const handleChangeRowsPerPage = (event: { target: { value: string } }) => {
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -94,6 +116,7 @@ export default function DataTable({
               padding: "16px 0px 16px 16px",
               gap: 2,
               display: type === "banner" ? "none" : "flex",
+              width: "100%",
             }}
           >
             <TextField
@@ -147,6 +170,30 @@ export default function DataTable({
                 />
               </LocalizationProvider>
             </Box>
+            <TextField
+              select
+              size="small"
+              fullWidth
+              sx={{
+                display:
+                  role === "super_admin"
+                    ? type2 === "user"
+                      ? "block"
+                      : "none"
+                    : "none",
+                width: "15%",
+              }}
+              defaultValue="user"
+              name="search_user_role"
+              placeholder="Search User Role"
+              onChange={searchFunction}
+            >
+              {selectRole.map((i, idx) => (
+                <MenuItem key={idx} value={i.value}>
+                  {i.label}
+                </MenuItem>
+              ))}
+            </TextField>
           </Box>
           <Box
             sx={{ width: "20%", padding: 2, display: type ? "block" : "none" }}
@@ -163,8 +210,8 @@ export default function DataTable({
                 type === "approve" || type === "banner"
                   ? searchValue
                   : type === "chapter"
-                    ? searchValue
-                    : ""
+                  ? searchValue
+                  : ""
               }
               onChange={searchFunction}
               helperText={
@@ -195,7 +242,7 @@ export default function DataTable({
           </Box>
         </Stack>
 
-        <TableContainer sx={{ maxHeight: 440 }}>
+        <TableContainer ref={tableContainerRef} sx={{ maxHeight: 440 }}>
           <Table stickyHeader sx={{ minWidth: 650 }}>
             <TableHead>
               <TableRow>

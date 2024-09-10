@@ -17,7 +17,7 @@ const UserService = {
 
     if (params) {
       return api.get({
-        path: `/user?name=${params.name}&phone=${params.phone}&start_date=${params.start_date}&end_date=${params.end_date}`,
+        path: `/user?name=${params.name}&phone=${params.phone}&start_date=${params.start_date}&end_date=${params.end_date}&user_role=${params.user_role}`,
         headers: { token: token },
       });
     } else {

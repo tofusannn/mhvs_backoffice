@@ -2,8 +2,12 @@ import UserService from "@/api/Managements/UserService";
 import { CircularProgress, Grid, styled } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, Sector, ResponsiveContainer } from "recharts";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 const UserDashboard = () => {
+  const router = useRouter();
+
   const [reloadPage, setReloadPage] = useState(true);
   setTimeout(() => setReloadPage(false), 1000);
   const [nationality, setNationality] = useState([{ name: "", value: 0 }]);
@@ -15,8 +19,18 @@ const UserDashboard = () => {
 
   async function getDashboardData() {
     const data = await UserService.getUserList(undefined).then((res: any) => {
+      if (res.msg === "user not role admin") {
+        alert("user not role admin");
+        Cookies.remove("phone");
+        Cookies.remove("token");
+        Cookies.remove("token_expire");
+        Cookies.remove("user_role");
+        router.push("/auth");
+        return;
+      }
       return res.result;
     });
+    if (!data) return;
     const thaiData = data.filter((i: any) => i.nationality === "thai");
     const laosData = data.filter((i: any) => i.nationality === "laos");
     const myanmarData = data.filter((i: any) => i.nationality === "myanmar");

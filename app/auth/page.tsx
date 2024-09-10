@@ -49,6 +49,7 @@ const LoginPage = (props: Props) => {
             Cookies.set("phone", values.phone);
             Cookies.set("token", res.result.token);
             Cookies.set("token_expire", res.result.token_expire);
+            Cookies.set("user_role", res.result.role);
             router.push("/dashboard");
           } else {
             setOpenToast(true);

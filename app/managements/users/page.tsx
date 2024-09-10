@@ -118,6 +118,7 @@ const UserManagementsPage = () => {
     phone: "",
     start_date: "",
     end_date: "",
+    user_role: "user",
   });
 
   useEffect(() => {
@@ -262,8 +263,10 @@ const UserManagementsPage = () => {
       value = e.target.value;
       if (name === "search_phone") {
         obj.phone = value;
-      } else {
+      } else if (name === "search_name") {
         obj.name = value;
+      } else {
+        obj.user_role = value;
       }
     } else {
       name = nameDate;
@@ -276,6 +279,19 @@ const UserManagementsPage = () => {
     }
     setSearchParams(obj);
     getAllUserList(searchParams);
+  }
+
+  function checkRoleUser(role?: string) {
+    switch (role) {
+      case "user":
+        return "User";
+      case "admin":
+        return "Admin";
+      case "super_admin":
+        return "Super Admin";
+      case "admin_not_approve":
+        return "Admin Not Approve";
+    }
   }
 
   return (
@@ -308,13 +324,15 @@ const UserManagementsPage = () => {
                       row.nationality.slice(1)}
                 </TableCell>
                 <TableCell>
-                  {row.gender.charAt(0).toUpperCase() + row.gender.slice(1)}
+                  {row.gender === null
+                    ? "-"
+                    : row.gender.charAt(0).toUpperCase() + row.gender.slice(1)}
                 </TableCell>
                 <TableCell>{row.phone}</TableCell>
                 <TableCell>
                   {dayjs(row.create_datetime).format("DD/MM/YYYY")}
                 </TableCell>
-                <TableCell>{row.role === "user" ? "User" : "Admin"}</TableCell>
+                <TableCell>{checkRoleUser(row.role)}</TableCell>
                 <TableCell>
                   <IconButton onClick={() => openDialog("edit", row)}>
                     <Edit />
