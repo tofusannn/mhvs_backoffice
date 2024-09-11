@@ -120,7 +120,7 @@ const UserManagementsPage = () => {
     end_date: "",
     user_role: "user",
   });
-
+  const [oldDataObj, setOldDataObj] = useState<ITypeUser>();
   useEffect(() => {
     getAllUserList();
   }, []);
@@ -150,6 +150,7 @@ const UserManagementsPage = () => {
       setOpenDelete(true);
       setIdDelete(rows.id);
     } else if (params === "edit") {
+      setOldDataObj(rows);
       const fields = [
         "id",
         "pre_name",
@@ -513,33 +514,40 @@ const UserManagementsPage = () => {
                   }
                 ></TextField>
               </Grid>
-              <Grid
-                container
-                justifyContent={"space-between"}
-                display={
-                  type === "edit" && mainUser === values.phone ? "none" : "flex"
-                }
-              >
-                <Typography>บทบาท</Typography>
-                {/* {console.log(values.role)} */}
-                <Stack direction={"row"} alignItems={"center"}>
-                  <Typography>User</Typography>
-                  <Switch
-                    id="role"
-                    name="role"
-                    checked={values.role === "admin"}
-                    onChange={() =>
-                      setFieldValue(
-                        "role",
-                        values.role === "user" ? "admin" : "user",
-                        false
-                      )
-                    }
-                  />
+              {oldDataObj?.role === "super_admin" ||
+              oldDataObj?.role === "admin" ? (
+                <div />
+              ) : (
+                <Grid
+                  container
+                  justifyContent={"space-between"}
+                  display={
+                    type === "edit" && mainUser === values.phone
+                      ? "none"
+                      : "flex"
+                  }
+                >
+                  <Typography>บทบาท</Typography>
+                  {/* {console.log(values.role)} */}
+                  <Stack direction={"row"} alignItems={"center"}>
+                    <Typography>User</Typography>
+                    <Switch
+                      id="role"
+                      name="role"
+                      checked={values.role === "admin"}
+                      onChange={() =>
+                        setFieldValue(
+                          "role",
+                          values.role === "user" ? "admin" : "user",
+                          false
+                        )
+                      }
+                    />
 
-                  <Typography>Admin</Typography>
-                </Stack>
-              </Grid>
+                    <Typography>Admin</Typography>
+                  </Stack>
+                </Grid>
+              )}
             </Grid>
           </DialogContent>
           <DialogActions sx={{ justifyContent: "center", paddingY: 3 }}>
